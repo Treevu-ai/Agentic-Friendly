@@ -82,6 +82,7 @@ function App() {
 
 /* ────────────────────── Nav */
 function Nav({ copy, lang, setLang }) {
+  const [open, setOpen] = useS(false);
   return (
     <nav className="nav">
       <div className="nav-brand">
@@ -104,7 +105,26 @@ function Nav({ copy, lang, setLang }) {
         <button className="btn btn--accent" style={{ padding: "8px 14px", fontSize: 12 }}>
           {copy.nav.cta} <span className="arr">→</span>
         </button>
+        <button className="nav-burger" onClick={() => setOpen(o => !o)} aria-label="Menu">
+          {open ? "✕" : "☰"}
+        </button>
       </div>
+      {open && (
+        <div className="nav-mobile-menu">
+          {copy.nav.links.map((l, i) => (
+            <a key={i} href="#" onClick={() => setOpen(false)}>{l}</a>
+          ))}
+          <div className="nav-mobile-bottom">
+            <div className="nav-toggle">
+              <button onClick={() => { setLang("es"); }} className={lang === "es" ? "is-on" : ""}>ES</button>
+              <button onClick={() => { setLang("en"); }} className={lang === "en" ? "is-on" : ""}>EN</button>
+            </div>
+            <button className="btn btn--accent" style={{ padding: "10px 16px", fontSize: 13, width: "100%" }}>
+              {copy.nav.cta} <span className="arr">→</span>
+            </button>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
@@ -205,8 +225,9 @@ function Hero({ copy }) {
         .hero-video-overlay {
           position: absolute; inset: 0;
           background:
-            radial-gradient(ellipse at 50% 30%, transparent 0%, var(--ink-0) 85%),
-            linear-gradient(180deg, var(--ink-0) 0%, transparent 20%, transparent 70%, var(--ink-0) 100%);
+            oklch(0.09 0.014 270 / 0.52),
+            radial-gradient(ellipse at 50% 30%, oklch(0.08 0.014 270 / 0.30) 0%, var(--ink-0) 82%),
+            linear-gradient(180deg, var(--ink-0) 0%, transparent 18%, transparent 72%, var(--ink-0) 100%);
         }
         .hero-grid {
           position: absolute; inset: 0;

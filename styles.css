@@ -135,6 +135,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   position: sticky;
   top: 0;
   z-index: 50;
+  /* needed so mobile dropdown positions relative to nav */
+  isolation: isolate;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -204,6 +206,52 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .nav-toggle button.is-on {
   background: var(--ink-fg);
   color: var(--ink-0);
+}
+
+/* hamburger — hidden on desktop, shown on mobile */
+.nav-burger {
+  display: none;
+  font-size: 18px;
+  color: var(--ink-fg-mute);
+  padding: 4px 8px;
+  line-height: 1;
+}
+@media (max-width: 800px) {
+  .nav-burger { display: flex; align-items: center; }
+  .nav-links { display: none !important; }
+  .nav-right .nav-toggle,
+  .nav-right .btn--accent { display: none; }
+}
+
+/* mobile dropdown */
+.nav-mobile-menu {
+  position: absolute;
+  top: 100%;
+  left: 0; right: 0;
+  background: oklch(0.14 0.016 270 / 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--ink-line);
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0 16px;
+  z-index: 49;
+}
+.nav-mobile-menu a {
+  padding: 14px 28px;
+  font-size: 15px;
+  color: var(--ink-fg-mute);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink-line);
+  transition: color .15s;
+}
+.nav-mobile-menu a:last-of-type { border-bottom: none; }
+.nav-mobile-menu a:hover { color: var(--ink-fg); }
+.nav-mobile-bottom {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 28px 0;
 }
 
 /* Buttons */

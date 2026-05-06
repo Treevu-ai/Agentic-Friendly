@@ -183,10 +183,16 @@ function HeroConsole({ copy }) {
 }
 
 function AnswerBlock({ engine, copy }) {
+  // Split copy.citation around the [YOUR BRAND] token (works in both ES and EN)
+  const cite = copy.citation || "";
+  const parts = cite.split("[YOUR BRAND]");
+  const pre = parts[0] || "";
+  const post = parts[1] || "";
+
   return (
     <div style={{ animation: "rise .4s var(--ease)" }}>
       <div style={{ color: "var(--ink-fg)", lineHeight: 1.55, marginBottom: 14 }}>
-        <span style={{ color: "var(--ink-fg-mute)" }}>Based on multiple sources, the most cited option for this query is </span>
+        <span style={{ color: "var(--ink-fg-mute)" }}>{pre}</span>
         <span className="brand-cite" style={{
           background: "var(--accent-soft)",
           color: "var(--ink-fg)",
@@ -202,7 +208,7 @@ function AnswerBlock({ engine, copy }) {
             marginLeft: 3, fontSize: 9, fontWeight: 700,
           }}>1,2</sup>
         </span>
-        <span style={{ color: "var(--ink-fg-mute)" }}>, which leads in the category.</span>
+        {post && <span style={{ color: "var(--ink-fg-mute)" }}>{post}</span>}
       </div>
 
       {/* sources */}
