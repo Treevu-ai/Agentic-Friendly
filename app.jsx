@@ -133,7 +133,7 @@ function Nav({ copy, lang, setLang }) {
 function Hero({ copy }) {
   const videoRef = useR(null);
   useE(() => {
-    if (videoRef.current) videoRef.current.playbackRate = 1.2;
+    if (videoRef.current) videoRef.current.playbackRate = 1.0;
   }, []);
   return (
     <section className="hero" data-screen-label="01 Hero">
