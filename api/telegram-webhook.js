@@ -1,8 +1,8 @@
 // Agentic Friendly · Telegram Webhook
 // Auto-reply al usuario + notifica a Ricardo en Telegram personal
-// Env vars requeridas en Vercel: TELEGRAM_BOT_TOKEN, ADMIN_CHAT_ID
+// Env vars en Vercel: TELEGRAM_BOT_TOKEN, ADMIN_CHAT_ID
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== "POST") return res.status(200).json({ ok: true });
 
   const { message } = req.body || {};
@@ -27,20 +27,20 @@ export default async function handler(req, res) {
 
     // Auto-reply al usuario
     await send(chatId,
-      `👋 Hola *${firstName}*\\!\n\nGracias por revisar tu GEO Score — *${score}/100* queda registrado\\. Ricardo lo revisará y te contactará pronto\\.\n\n¿Tienes alguna pregunta mientras tanto?`
+      `👋 Hola *${firstName}*!\n\nGracias por revisar tu GEO Score — *${score}/100* queda registrado. Ricardo lo revisará y te contactará pronto.\n\n¿Tienes alguna pregunta mientras tanto?`
     );
 
     // Notificación a Ricardo
     await send(ADMIN,
-      `🎯 *Nuevo lead · Agentic Friendly*\n\nNombre: ${firstName}\nUsername: ${username}\nChat ID: \`${chatId}\`\nGEO Score: *${score}/100*\n\n[→ Respóndele aquí](tg://user?id=${chatId})`
+      `🎯 *Nuevo lead · Agentic Friendly*\n\nNombre: ${firstName}\nUsername: ${username}\nChat ID: \`${chatId}\`\nGEO Score: *${score}/100*`
     );
 
   } else {
     // Mensaje libre del usuario → reenvía a Ricardo
     await send(ADMIN,
-      `📩 *${firstName}* (${username}) dice:\n\n_${text}_\n\n[→ Respóndele](tg://user?id=${chatId})`
+      `📩 *Mensaje de ${firstName}* (${username}):\n\n${text}\n\nChat ID: \`${chatId}\``
     );
   }
 
   return res.status(200).json({ ok: true });
-}
+};
