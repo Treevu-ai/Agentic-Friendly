@@ -1,5 +1,5 @@
 {
-  "name": "AgenticFriendly · GEO Lead Bot v1",
+  "name": "AgenticFriendly · GEO Lead Bot v2 — Captura + Sheets + Notificación",
   "flow": [
     {
       "id": 1,
@@ -12,13 +12,13 @@
         }
       },
       "filter": {
-        "name": "Solo /start con geo score",
+        "name": "Solo mensajes privados de texto",
         "conditions": [
           [
             {
-              "a": "{{1.message.text}}",
-              "b": "/start geo_",
-              "o": "text:startswith"
+              "a": "{{1.message.chat.type}}",
+              "b": "private",
+              "o": "text:equal"
             }
           ]
         ]
@@ -35,28 +35,37 @@
     },
     {
       "id": 2,
-      "module": "tools:SetVariables",
+      "module": "datastore:ActionSearchRecords",
       "version": 1,
-      "parameters": {},
+      "parameters": {
+        "__IMTCONN__": {
+          "data": { "scoped": "true", "connection": "datastore" },
+          "label": "GEO_Bot_State"
+        },
+        "dataStoreId": "GEO_Bot_State"
+      },
       "filter": null,
       "mapper": {
-        "variables": [
-          {
-            "name": "score",
-            "value": "{{parseNumber(replace(1.message.text, \"/start geo_\", \"\"))}}"
-          },
-          {
-            "name": "chat_id",
-            "value": "{{1.message.chat.id}}"
-          },
-          {
-            "name": "first_name",
-            "value": "{{ifempty(1.message.from.first_name, \"visitante\")}}"
-          }
-        ]
+        "filter": {
+          "conditions": [
+            [
+              {
+                "a": "chat_id",
+                "o": "text:equal",
+                "b": "{{1.message.chat.id}}"
+              }
+            ]
+          ]
+        },
+        "limit": "1"
       },
       "metadata": {
-        "designer": { "x": 330, "y": 0 }
+        "designer": { "x": 330, "y": 0 },
+        "restore": {
+          "parameters": {
+            "__IMTCONN__": { "label": "GEO_Bot_State" }
+          }
+        }
       }
     },
     {
@@ -68,42 +77,36 @@
       "mapper": {},
       "metadata": { "designer": { "x": 660, "y": 0 } },
       "routes": [
+
         {
           "flow": [
             {
               "id": 4,
-              "module": "telegram-bot:ActionSendMessage",
+              "module": "datastore:ActionAddRecord",
               "version": 1,
               "parameters": {
                 "__IMTCONN__": {
-                  "data": { "scoped": "true", "connection": "telegram-bot" },
-                  "label": "agentic_friendly_bot"
-                }
+                  "data": { "scoped": "true", "connection": "datastore" },
+                  "label": "GEO_Bot_State"
+                },
+                "dataStoreId": "GEO_Bot_State"
               },
               "filter": null,
               "mapper": {
-                "chat_id": "{{2.chat_id}}",
-                "parse_mode": "Markdown",
-                "text": "👋 Hola *{{2.first_name}}*, soy el asistente de *Agentic Friendly*.\n\nTu GEO Score: *{{2.score}}/100* 🔴\n\nResultado crítico. Tu web prácticamente no existe para los agentes de IA — ChatGPT, Perplexity, Gemini — que ya responden preguntas de tus clientes potenciales. Cada semana que pasa, esa brecha la capitalizan otros.\n\nEl reporte ya identifica las brechas exactas. Lo que sigue es saber cuál mover primero.\n\n¿Agendamos 20 min para revisar tu hoja de ruta? Sin compromiso.\n\n👉 [Elegir horario](https://calendly.com/ricardocuba/agendar-reunion)"
+                "key": "{{1.message.chat.id}}",
+                "data": {
+                  "chat_id": "{{1.message.chat.id}}",
+                  "stage": "1",
+                  "score": "{{parseNumber(replace(1.message.text, \"/start geo_\", \"\"))}}",
+                  "first_name": "{{ifempty(1.message.from.first_name, \"visitante\")}}",
+                  "nombre": "",
+                  "contacto": "",
+                  "horario": ""
+                },
+                "overwrite": true
               },
-              "metadata": { "designer": { "x": 990, "y": -300 } }
-            }
-          ],
-          "filter": {
-            "name": "Crítico 0–39",
-            "conditions": [
-              [
-                {
-                  "a": "{{2.score}}",
-                  "b": "39",
-                  "o": "number:lessequal"
-                }
-              ]
-            ]
-          }
-        },
-        {
-          "flow": [
+              "metadata": { "designer": { "x": 990, "y": -400 } }
+            },
             {
               "id": 5,
               "module": "telegram-bot:ActionSendMessage",
@@ -116,72 +119,50 @@
               },
               "filter": null,
               "mapper": {
-                "chat_id": "{{2.chat_id}}",
+                "chat_id": "{{1.message.chat.id}}",
                 "parse_mode": "Markdown",
-                "text": "👋 Hola *{{2.first_name}}*, soy el asistente de *Agentic Friendly*.\n\nTu GEO Score: *{{2.score}}/100* 🟡\n\nEstás en el 40% de webs que ya aparecen parcialmente en búsquedas agénticas — buen punto de partida. Pero hay brechas concretas que te hacen perder visibilidad frente a competidores más rápidos.\n\nCon los ajustes correctos en las dimensiones más débiles puedes estar en el top 30% en menos de 60 días.\n\n¿Revisamos juntos las prioridades en 20 min?\n\n👉 [Elegir horario](https://calendly.com/ricardocuba/agendar-reunion)"
+                "text": "👋 Hola *{{ifempty(1.message.from.first_name, \"visitante\")}}* — vi tu GEO Score: *{{parseNumber(replace(1.message.text, \"/start geo_\", \"\"))}}/100*.\n\nPara enviarte recomendaciones personalizadas y coordinar una revisión, necesito tres datos rápidos.\n\n*¿Cuál es tu nombre completo?*"
               },
-              "metadata": { "designer": { "x": 990, "y": -100 } }
+              "metadata": { "designer": { "x": 1320, "y": -400 } }
             }
           ],
           "filter": {
-            "name": "En desarrollo 40–59",
+            "name": "Nuevo inicio (/start geo_)",
             "conditions": [
               [
                 {
-                  "a": "{{2.score}}",
-                  "b": "40",
-                  "o": "number:greaterequal"
-                },
-                {
-                  "a": "{{2.score}}",
-                  "b": "59",
-                  "o": "number:lessequal"
+                  "a": "{{1.message.text}}",
+                  "b": "/start geo_",
+                  "o": "text:startswith"
                 }
               ]
             ]
           }
         },
+
         {
           "flow": [
             {
               "id": 6,
-              "module": "telegram-bot:ActionSendMessage",
+              "module": "datastore:ActionUpdateRecord",
               "version": 1,
               "parameters": {
                 "__IMTCONN__": {
-                  "data": { "scoped": "true", "connection": "telegram-bot" },
-                  "label": "agentic_friendly_bot"
-                }
+                  "data": { "scoped": "true", "connection": "datastore" },
+                  "label": "GEO_Bot_State"
+                },
+                "dataStoreId": "GEO_Bot_State"
               },
               "filter": null,
               "mapper": {
-                "chat_id": "{{2.chat_id}}",
-                "parse_mode": "Markdown",
-                "text": "👋 Hola *{{2.first_name}}*, soy el asistente de *Agentic Friendly*.\n\nTu GEO Score: *{{2.score}}/100* 🟢\n\nEstás bien posicionado — mejor que la mayoría. El siguiente paso es ajustar las dimensiones más débiles para entrar al top 20% y mantener esa ventaja mientras el mercado se pone al día.\n\nEn 20 min puedo mostrarte qué acciones tienen mayor impacto en tu score actual.\n\n¿Agendamos?\n\n👉 [Elegir horario](https://calendly.com/ricardocuba/agendar-reunion)"
-              },
-              "metadata": { "designer": { "x": 990, "y": 100 } }
-            }
-          ],
-          "filter": {
-            "name": "Competitivo 60–79",
-            "conditions": [
-              [
-                {
-                  "a": "{{2.score}}",
-                  "b": "60",
-                  "o": "number:greaterequal"
-                },
-                {
-                  "a": "{{2.score}}",
-                  "b": "79",
-                  "o": "number:lessequal"
+                "key": "{{1.message.chat.id}}",
+                "data": {
+                  "nombre": "{{1.message.text}}",
+                  "stage": "2"
                 }
-              ]
-            ]
-          }
-        },
-        {
-          "flow": [
+              },
+              "metadata": { "designer": { "x": 990, "y": -133 } }
+            },
             {
               "id": 7,
               "module": "telegram-bot:ActionSendMessage",
@@ -194,26 +175,199 @@
               },
               "filter": null,
               "mapper": {
-                "chat_id": "{{2.chat_id}}",
+                "chat_id": "{{1.message.chat.id}}",
                 "parse_mode": "Markdown",
-                "text": "👋 Hola *{{2.first_name}}*, soy el asistente de *Agentic Friendly*.\n\nTu GEO Score: *{{2.score}}/100* ⭐\n\nTop 20% — tu web ya habla el idioma de los agentes de IA. La ventaja existe, pero el mercado avanza rápido y mantener ese liderazgo requiere estrategia continua.\n\nSi quieres revisar cómo consolidar y ampliar tu posicionamiento agéntico, puedo ayudarte a diseñar la siguiente fase.\n\n👉 [Agendar sesión estratégica](https://calendly.com/ricardocuba/agendar-reunion)"
+                "text": "Perfecto, *{{1.message.text}}* 👍\n\n*¿Cuál es tu WhatsApp o email?*\n_(el que prefieras para coordinar)_"
               },
-              "metadata": { "designer": { "x": 990, "y": 300 } }
+              "metadata": { "designer": { "x": 1320, "y": -133 } }
             }
           ],
           "filter": {
-            "name": "Líder 80–100",
+            "name": "Stage 1 — esperando nombre",
             "conditions": [
               [
                 {
-                  "a": "{{2.score}}",
-                  "b": "80",
-                  "o": "number:greaterequal"
+                  "a": "{{2.stage}}",
+                  "b": "1",
+                  "o": "text:equal"
+                },
+                {
+                  "a": "{{1.message.text}}",
+                  "b": "/start",
+                  "o": "text:notstartswith"
+                }
+              ]
+            ]
+          }
+        },
+
+        {
+          "flow": [
+            {
+              "id": 8,
+              "module": "datastore:ActionUpdateRecord",
+              "version": 1,
+              "parameters": {
+                "__IMTCONN__": {
+                  "data": { "scoped": "true", "connection": "datastore" },
+                  "label": "GEO_Bot_State"
+                },
+                "dataStoreId": "GEO_Bot_State"
+              },
+              "filter": null,
+              "mapper": {
+                "key": "{{1.message.chat.id}}",
+                "data": {
+                  "contacto": "{{1.message.text}}",
+                  "stage": "3"
+                }
+              },
+              "metadata": { "designer": { "x": 990, "y": 133 } }
+            },
+            {
+              "id": 9,
+              "module": "telegram-bot:ActionSendMessage",
+              "version": 1,
+              "parameters": {
+                "__IMTCONN__": {
+                  "data": { "scoped": "true", "connection": "telegram-bot" },
+                  "label": "agentic_friendly_bot"
+                }
+              },
+              "filter": null,
+              "mapper": {
+                "chat_id": "{{1.message.chat.id}}",
+                "parse_mode": "Markdown",
+                "text": "Anotado ✅\n\n*¿Cuál es tu horario preferido para que te contactemos?*\n\n· Mañanas (8–12h)\n· Tardes (12–18h)\n· Noches (18–21h)"
+              },
+              "metadata": { "designer": { "x": 1320, "y": 133 } }
+            }
+          ],
+          "filter": {
+            "name": "Stage 2 — esperando contacto",
+            "conditions": [
+              [
+                {
+                  "a": "{{2.stage}}",
+                  "b": "2",
+                  "o": "text:equal"
+                },
+                {
+                  "a": "{{1.message.text}}",
+                  "b": "/start",
+                  "o": "text:notstartswith"
+                }
+              ]
+            ]
+          }
+        },
+
+        {
+          "flow": [
+            {
+              "id": 10,
+              "module": "datastore:ActionUpdateRecord",
+              "version": 1,
+              "parameters": {
+                "__IMTCONN__": {
+                  "data": { "scoped": "true", "connection": "datastore" },
+                  "label": "GEO_Bot_State"
+                },
+                "dataStoreId": "GEO_Bot_State"
+              },
+              "filter": null,
+              "mapper": {
+                "key": "{{1.message.chat.id}}",
+                "data": {
+                  "horario": "{{1.message.text}}",
+                  "stage": "4"
+                }
+              },
+              "metadata": { "designer": { "x": 990, "y": 400 } }
+            },
+            {
+              "id": 11,
+              "module": "google-sheets:ActionAddRow",
+              "version": 1,
+              "parameters": {
+                "__IMTCONN__": {
+                  "data": { "scoped": "true", "connection": "google" },
+                  "label": "Google Sheets"
+                },
+                "spreadsheetId": "REEMPLAZAR_CON_ID_DE_SHEET",
+                "sheetId": "GEO_Leads"
+              },
+              "filter": null,
+              "mapper": {
+                "values": {
+                  "Fecha": "{{formatDate(now, \"DD/MM/YYYY HH:mm\")}}",
+                  "Nombre": "{{2.nombre}}",
+                  "Contacto": "{{2.contacto}}",
+                  "Horario": "{{1.message.text}}",
+                  "GEO Score": "{{2.score}}",
+                  "Telegram": "{{2.first_name}}",
+                  "Chat ID": "{{1.message.chat.id}}"
+                }
+              },
+              "metadata": { "designer": { "x": 1320, "y": 300 } }
+            },
+            {
+              "id": 12,
+              "module": "gmail:ActionSendEmail",
+              "version": 1,
+              "parameters": {
+                "__IMTCONN__": {
+                  "data": { "scoped": "true", "connection": "google" },
+                  "label": "sinapsisinnovadoraperu@gmail.com"
+                }
+              },
+              "filter": null,
+              "mapper": {
+                "to": "sinapsisinnovadoraperu@gmail.com",
+                "subject": "🎯 Nuevo lead GEO Score — {{2.nombre}} ({{2.score}}/100)",
+                "content": "<h2>Nuevo lead desde Agentic Friendly Bot</h2><table><tr><td><b>Nombre</b></td><td>{{2.nombre}}</td></tr><tr><td><b>Contacto</b></td><td>{{2.contacto}}</td></tr><tr><td><b>Horario preferido</b></td><td>{{1.message.text}}</td></tr><tr><td><b>GEO Score</b></td><td>{{2.score}}/100</td></tr><tr><td><b>Telegram</b></td><td>@{{2.first_name}}</td></tr><tr><td><b>Fecha</b></td><td>{{formatDate(now, \"DD/MM/YYYY HH:mm\")}}</td></tr></table>",
+                "contentType": "html"
+              },
+              "metadata": { "designer": { "x": 1320, "y": 400 } }
+            },
+            {
+              "id": 13,
+              "module": "telegram-bot:ActionSendMessage",
+              "version": 1,
+              "parameters": {
+                "__IMTCONN__": {
+                  "data": { "scoped": "true", "connection": "telegram-bot" },
+                  "label": "agentic_friendly_bot"
+                }
+              },
+              "filter": null,
+              "mapper": {
+                "chat_id": "{{1.message.chat.id}}",
+                "parse_mode": "Markdown",
+                "text": "✅ *¡Listo, {{2.nombre}}!*\n\nRicardo te contactará en tu horario preferido: *{{1.message.text}}*.\n\nMientras tanto, revisa las recomendaciones del reporte que descargaste — ya tienes las acciones prioritarias identificadas.\n\nHasta pronto 🚀"
+              },
+              "metadata": { "designer": { "x": 1320, "y": 500 } }
+            }
+          ],
+          "filter": {
+            "name": "Stage 3 — esperando horario",
+            "conditions": [
+              [
+                {
+                  "a": "{{2.stage}}",
+                  "b": "3",
+                  "o": "text:equal"
+                },
+                {
+                  "a": "{{1.message.text}}",
+                  "b": "/start",
+                  "o": "text:notstartswith"
                 }
               ]
             ]
           }
         }
+
       ]
     }
   ],
