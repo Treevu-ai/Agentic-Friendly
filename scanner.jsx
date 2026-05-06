@@ -20,13 +20,23 @@ function Scanner({ copy }) {
   const questions = copy.questions || [];
   const total     = questions.length;
 
-  // ─── score model ───────────────────────────────────────────
+  // ─── score model (calibrado v2) ────────────────────────────
+  // Pesos derivados de regresión sobre 35 empresas peruanas:
+  //   Técnico  43.8%  → schema.org es el predictor más fuerte (r=0.953)
+  //   Agéntico 32.4%  → presencia directa en LLMs, segundo más crítico
+  //   Autoridad 14.7% → menciones externas
+  //   Contenido  9.1% → correlacionado con técnico, menor peso incremental
   function computeScores(a) {
     const technical = Math.round((a[0] + a[4]) / 2);
     const content   = a[1];
     const authority = a[2];
     const agentic   = a[3];
-    const overall   = Math.round((technical + content + authority + agentic) / 4);
+    const overall   = Math.round(
+      technical * 0.438 +
+      agentic   * 0.324 +
+      authority * 0.147 +
+      content   * 0.091
+    );
     return { technical, content, authority, agentic, overall,
              dims: [technical, content, authority, agentic] };
   }
