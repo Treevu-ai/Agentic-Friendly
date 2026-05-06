@@ -1,6 +1,6 @@
 /* AGENTIC FIRST — main app */
 
-const { useState: useS, useEffect: useE } = React;
+const { useState: useS, useEffect: useE, useRef: useR } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "lang": "es",
@@ -131,10 +131,15 @@ function Nav({ copy, lang, setLang }) {
 
 /* ────────────────────── Hero */
 function Hero({ copy }) {
+  const videoRef = useR(null);
+  useE(() => {
+    if (videoRef.current) videoRef.current.playbackRate = 1.8;
+  }, []);
   return (
     <section className="hero" data-screen-label="01 Hero">
       <div className="hero-bg">
         <video
+          ref={videoRef}
           className="hero-video"
           src={(window.__resources && window.__resources.heroVideo) || "assets/hero.mp4"}
           autoPlay

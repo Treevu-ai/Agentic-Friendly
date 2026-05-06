@@ -125,7 +125,63 @@ window.COPY = {
         "Tu competencia te está comiendo.",
         "Hay base, pero falta volumen.",
       ],
-      retry: "Probar otro dominio",
+      retry: "Nueva evaluación",
+      inputLabel: "Dominio o nombre de tu empresa",
+      inputPlaceholder: "tuempresa.com",
+      startCta: "Iniciar evaluación",
+      downloadCta: "Descargar Reporte PDF",
+      questions: [
+        {
+          dim: "técnico",
+          q: "¿Tu sitio web tiene schema.org implementado?",
+          opts: [
+            { l: "Sí — JSON-LD completo (Organization, Service, FAQPage)", v: 95 },
+            { l: "Tenemos algo pero no estamos seguros de qué exactamente", v: 50 },
+            { l: "No lo tenemos implementado", v: 20 },
+            { l: "No sé qué es schema.org", v: 5 },
+          ],
+        },
+        {
+          dim: "contenido",
+          q: "¿Cómo está estructurado el contenido de tu web?",
+          opts: [
+            { l: "Secciones claras, FAQs y respuestas directas a preguntas de clientes", v: 95 },
+            { l: "Buen contenido pero sin estructura de preguntas/respuestas", v: 55 },
+            { l: "Landing básica con poco contenido descriptivo", v: 25 },
+            { l: "No tenemos web propia activa", v: 5 },
+          ],
+        },
+        {
+          dim: "autoridad",
+          q: "¿Tu empresa aparece mencionada fuera de tu propia web?",
+          opts: [
+            { l: "Sí — medios del sector, directorios, Google Business optimizado", v: 90 },
+            { l: "Solo en redes sociales y algunos directorios básicos", v: 50 },
+            { l: "Principalmente en nuestra propia web", v: 20 },
+            { l: "Casi no aparecemos en ningún lado", v: 5 },
+          ],
+        },
+        {
+          dim: "agéntico",
+          q: "¿Has buscado tu empresa o servicio en ChatGPT, Claude o Perplexity?",
+          opts: [
+            { l: "Sí — aparecemos bien posicionados con información correcta", v: 95 },
+            { l: "Sí — pero la info es incorrecta o directamente no aparecemos", v: 20 },
+            { l: "No lo hemos probado todavía", v: 10 },
+            { l: "No sabíamos que podíamos aparecer en respuestas de IA", v: 5 },
+          ],
+        },
+        {
+          dim: "técnico ux",
+          q: "¿Cómo rinde tu sitio técnicamente?",
+          opts: [
+            { l: "Rápido — Core Web Vitals en verde, optimizado para móvil", v: 90 },
+            { l: "Funciona bien pero sin optimización específica", v: 55 },
+            { l: "Carga lenta, especialmente en móvil", v: 20 },
+            { l: "No lo hemos medido nunca", v: 35 },
+          ],
+        },
+      ],
     },
     pricing: {
       tag: "Planes",
@@ -320,7 +376,63 @@ window.COPY = {
         "Competitors are eating your lunch.",
         "Foundation is there, volume isn't.",
       ],
-      retry: "Try another domain",
+      retry: "New evaluation",
+      inputLabel: "Your domain or company name",
+      inputPlaceholder: "yourcompany.com",
+      startCta: "Start evaluation",
+      downloadCta: "Download PDF Report",
+      questions: [
+        {
+          dim: "technical",
+          q: "Does your website have schema.org implemented?",
+          opts: [
+            { l: "Yes — complete JSON-LD (Organization, Service, FAQPage)", v: 95 },
+            { l: "We have some but we're not sure what exactly", v: 50 },
+            { l: "Not implemented", v: 20 },
+            { l: "I don't know what schema.org is", v: 5 },
+          ],
+        },
+        {
+          dim: "content",
+          q: "How is your website content structured?",
+          opts: [
+            { l: "Clear sections, FAQs and direct answers to customer questions", v: 95 },
+            { l: "Good content but no question/answer structure", v: 55 },
+            { l: "Basic landing with little descriptive content", v: 25 },
+            { l: "We don't have an active website", v: 5 },
+          ],
+        },
+        {
+          dim: "authority",
+          q: "Does your company appear mentioned outside your own website?",
+          opts: [
+            { l: "Yes — industry media, directories, optimized Google Business Profile", v: 90 },
+            { l: "Only on social media and some basic directories", v: 50 },
+            { l: "Mainly on our own website", v: 20 },
+            { l: "We barely appear anywhere", v: 5 },
+          ],
+        },
+        {
+          dim: "agentic",
+          q: "Have you searched for your company or service in ChatGPT, Claude or Perplexity?",
+          opts: [
+            { l: "Yes — we show up well positioned with accurate information", v: 95 },
+            { l: "Yes — but the info is wrong or we don't appear at all", v: 20 },
+            { l: "We haven't tried it yet", v: 10 },
+            { l: "We didn't know we could appear in AI responses", v: 5 },
+          ],
+        },
+        {
+          dim: "technical ux",
+          q: "How does your site perform technically?",
+          opts: [
+            { l: "Fast — Core Web Vitals in green, optimized for mobile", v: 90 },
+            { l: "Works well but no specific optimization", v: 55 },
+            { l: "Slow, especially on mobile", v: 20 },
+            { l: "We've never measured it", v: 35 },
+          ],
+        },
+      ],
     },
     pricing: {
       tag: "Plans",
