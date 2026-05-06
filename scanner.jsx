@@ -1,5 +1,5 @@
-/* AGENTIC FIRST — GEO Score Quiz v4
-   CTA button → modal overlay → 5-question quiz one-by-one → delivery choice (PDF | email)
+/* AGENTIC FRIENDLY — GEO Score Quiz v5
+   CTA button → modal overlay → 5-question quiz one-by-one → delivery choice (PDF | email | Telegram)
    Bilingual via copy.scanner */
 
 const { useState: useQ, useEffect: useQE } = React;
@@ -79,17 +79,17 @@ function Scanner({ copy }) {
     setEmail(""); setEmailBusy(false);
   }
 
-  // ─── PDF ───────────────────────────────────────────────────
+  // ─── PDF (4-bloque: definiciones + gaps + recs + CTA Telegram) ─
   function downloadPDF() {
     if (!window.jspdf || !scores) return;
     setPdfBusy(true);
     try {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({ unit: "mm", format: "a4" });
-      const W = 210, M = 20, CW = 170;
+      const W = 210, M = 18, CW = 174;
 
-      function rgb(hex) {
-        return [parseInt(hex.slice(1,3),16), parseInt(hex.slice(3,5),16), parseInt(hex.slice(5,7),16)];
+      function rgb(h) {
+        return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
       }
       const INK    = rgb("#0d0e14");
       const ACCENT = rgb("#9f5afd");
@@ -99,135 +99,279 @@ function Scanner({ copy }) {
       const DANGER = rgb("#e05c5c");
       const scoreRgb = scores.overall < 35 ? DANGER : scores.overall < 65 ? WARN : ACCENT;
 
-      doc.setFillColor(...LIGHT);
-      doc.rect(0, 0, 210, 297, "F");
+      // auto-paginate: add page with mini-header if content overflows
+      function checkPage(yy, need) {
+        if (yy + need > 272) {
+          doc.addPage();
+          doc.setFillColor(...LIGHT); doc.rect(0, 0, W, 297, "F");
+          doc.setFillColor(...INK);   doc.rect(0, 0, W, 11, "F");
+          doc.setFillColor(...ACCENT); doc.rect(0, 11, W, 2, "F");
+          doc.setFont("helvetica", "normal"); doc.setFontSize(6.5);
+          doc.setTextColor(...MUTE);
+          doc.text("AGENTIC FRIENDLY  |  GEO SCORE  |  " + company, M, 8);
+          return 22;
+        }
+        return yy;
+      }
 
-      doc.setFillColor(...INK);
-      doc.rect(0, 0, 210, 50, "F");
+      // ── PAGE 1 ─────────────────────────────────────────────────
+      doc.setFillColor(...LIGHT); doc.rect(0, 0, W, 297, "F");
 
-      doc.setFont("helvetica", "bold"); doc.setFontSize(16);
+      // Header band
+      doc.setFillColor(...INK); doc.rect(0, 0, W, 52, "F");
+      doc.setFont("helvetica", "bold"); doc.setFontSize(13);
       doc.setTextColor(255, 255, 255);
-      doc.text("AGENTIC FIRST", M, 20);
-
-      doc.setFont("helvetica", "normal"); doc.setFontSize(8);
+      doc.text("AGENTIC FRIENDLY", M, 17);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(7);
       doc.setTextColor(...MUTE);
-      doc.text("GEO SCORE REPORT  ·  SINAPSIS INNOVADORA S.A.C.", M, 28);
-
+      doc.text("GEO SCORE REPORT  |  SINAPSIS INNOVADORA S.A.C.", M, 25);
       const dateStr = new Date().toLocaleDateString("es-PE", { day:"2-digit", month:"short", year:"numeric" });
-      doc.setTextColor(170, 170, 190);
-      doc.text(dateStr, W - M, 20, { align: "right" });
-
-      doc.setFont("helvetica", "bold"); doc.setFontSize(15);
+      doc.setTextColor(180, 180, 200);
+      doc.text(dateStr, W - M, 17, { align: "right" });
+      doc.setFont("helvetica", "bold"); doc.setFontSize(14);
       doc.setTextColor(255, 255, 255);
-      doc.text(company, M, 42);
+      doc.text(company, M, 44);
+      doc.setFillColor(...ACCENT); doc.rect(0, 52, W, 3, "F");
 
-      doc.setFillColor(...ACCENT);
-      doc.rect(0, 50, 210, 3, "F");
-
-      let y = 68;
-
-      doc.setFont("helvetica", "bold"); doc.setFontSize(8);
+      // Score block
+      let y = 66;
+      doc.setFont("helvetica", "bold"); doc.setFontSize(7);
       doc.setTextColor(...MUTE);
-      doc.text("SCORE GLOBAL · GEO + AGENTIC READINESS", M, y - 4);
-
-      doc.setFont("helvetica", "bold"); doc.setFontSize(80);
+      doc.text("SCORE GLOBAL  |  GEO + AGENTIC READINESS", M, y);
+      y += 3;
+      doc.setFont("helvetica", "bold"); doc.setFontSize(72);
       doc.setTextColor(...scoreRgb);
-      doc.text(`${scores.overall}`, M, y + 22);
-
+      doc.text(`${scores.overall}`, M, y + 20);
       doc.setFont("helvetica", "normal"); doc.setFontSize(20);
       doc.setTextColor(...MUTE);
-      doc.text("/100", M + 58, y + 22);
-
+      doc.text("/100", M + 54, y + 20);
       const vIdx = scores.overall < 35 ? 0 : scores.overall < 65 ? 1 : 2;
       const verdict = (copy.verdicts || [])[vIdx] || "";
-      doc.setFont("helvetica", "normal"); doc.setFontSize(11);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(10.5);
       doc.setTextColor(...INK);
-      doc.text(verdict, M, y + 34);
+      doc.text(verdict, M, y + 32);
+      y += 47;
+      doc.setDrawColor(220, 220, 230); doc.setLineWidth(0.3);
+      doc.line(M, y, W - M, y); y += 10;
 
-      y += 50;
-      doc.setDrawColor(220, 220, 230); doc.setLineWidth(0.4);
-      doc.line(M, y, W - M, y);
-      y += 12;
+      // ── BLOQUE A: Definicion de dimensiones ──────────────────
+      doc.setFont("helvetica", "bold"); doc.setFontSize(7);
+      doc.setTextColor(...MUTE);
+      doc.text("QUE MIDE CADA DIMENSION Y POR QUE TE IMPORTA", M, y);
+      y += 7;
 
-      doc.setFont("helvetica", "bold"); doc.setFontSize(9);
-      doc.setTextColor(...INK);
-      doc.text("PUNTUACIÓN POR DIMENSIÓN", M, y);
+      const DIMS_DEF = [
+        {
+          label: "TECNICO", w: "43.8%", score: scores.technical,
+          def: "Infraestructura que los crawlers de IA leen: schema.org JSON-LD, velocidad de carga, HTML semantico correcto.",
+          why: "Si los robots no entienden tu sitio, ningun LLM te citara, sin importar la calidad de tu contenido."
+        },
+        {
+          label: "AGENTICO", w: "32.4%", score: scores.agentic,
+          def: "Presencia directa en LLMs: si ChatGPT, Claude, Perplexity y Gemini te mencionan cuando alguien pregunta por tu servicio.",
+          why: "El factor mas diferenciador hoy. Las marcas con alto score agentico capturan clientes que ni saben que buscaban."
+        },
+        {
+          label: "AUTORIDAD", w: "14.7%", score: scores.authority,
+          def: "Menciones externas y validacion: Google Business Profile, directorios del sector, cobertura en medios relevantes.",
+          why: "Cuantos mas sitios te citen, mas confianza le asignan los modelos de IA a tu marca al generar respuestas."
+        },
+        {
+          label: "CONTENIDO", w: "9.1%", score: scores.content,
+          def: "Formato y profundidad: estructura Q&A, respuestas directas, cobertura de preguntas reales del cliente.",
+          why: "Los LLMs reproducen fragmentos especificos. El contenido vago no se cita; las respuestas concretas si."
+        },
+      ];
+
+      DIMS_DEF.forEach(d => {
+        const c = d.score < 35 ? DANGER : d.score < 65 ? WARN : ACCENT;
+        y = checkPage(y, 24);
+        // card bg
+        doc.setFillColor(255, 255, 255);
+        doc.roundedRect(M, y, CW, 21, 2.5, 2.5, "F");
+        doc.setDrawColor(215, 215, 228); doc.setLineWidth(0.25);
+        doc.roundedRect(M, y, CW, 21, 2.5, 2.5, "S");
+        // left accent bar
+        doc.setFillColor(...c);
+        doc.roundedRect(M, y, 3, 21, 1.5, 1.5, "F");
+        // label
+        doc.setFont("helvetica", "bold"); doc.setFontSize(7.5);
+        doc.setTextColor(...INK);
+        doc.text(d.label, M + 7, y + 6);
+        // score chip
+        const labelW = doc.getTextWidth(d.label);
+        doc.setFillColor(...c);
+        doc.roundedRect(M + 7 + labelW + 3, y + 1.5, 16, 5, 1.5, 1.5, "F");
+        doc.setFont("helvetica", "bold"); doc.setFontSize(6);
+        doc.setTextColor(255, 255, 255);
+        doc.text(`${d.score}/100`, M + 7 + labelW + 11, y + 5.8, { align: "center" });
+        // weight
+        doc.setFont("helvetica", "normal"); doc.setFontSize(6.5);
+        doc.setTextColor(...MUTE);
+        doc.text(`Peso: ${d.w}`, W - M - 4, y + 6, { align: "right" });
+        // definition
+        doc.setFont("helvetica", "normal"); doc.setFontSize(7.5);
+        doc.setTextColor(55, 55, 75);
+        const defLine = doc.splitTextToSize(d.def, CW - 12);
+        doc.text(defLine.slice(0, 1), M + 7, y + 12.5);
+        // why (italic)
+        doc.setFont("helvetica", "italic"); doc.setFontSize(7);
+        doc.setTextColor(...MUTE);
+        const whyLine = doc.splitTextToSize("Por que importa: " + d.why, CW - 12);
+        doc.text(whyLine.slice(0, 1), M + 7, y + 18);
+        y += 24;
+      });
+
+      y += 4;
+      doc.setDrawColor(220, 220, 230); doc.setLineWidth(0.3);
+      doc.line(M, y, W - M, y); y += 10;
+
+      // ── BLOQUE B: Gap visualization ───────────────────────────
+      y = checkPage(y, 68);
+      doc.setFont("helvetica", "bold"); doc.setFontSize(7);
+      doc.setTextColor(...MUTE);
+      doc.text("TU DIAGNOSTICO  |  BRECHA ACTUAL VS OBJETIVO (100 PTS)", M, y);
       y += 8;
 
-      const dimLabels = copy.breakdown || ["Técnico", "Contenido", "Autoridad", "Agéntico"];
-      const barW = CW - 60;
+      const gapData = [
+        { label: "Tecnico",   val: scores.technical },
+        { label: "Agentico",  val: scores.agentic   },
+        { label: "Autoridad", val: scores.authority  },
+        { label: "Contenido", val: scores.content    },
+      ].sort((a, b) => a.val - b.val); // mayor brecha primero
 
-      scores.dims.forEach((val, i) => {
-        const c    = val < 35 ? DANGER : val < 65 ? WARN : ACCENT;
-        const fill = (val / 100) * barW;
-        doc.setFont("helvetica", "normal"); doc.setFontSize(9);
+      const barW = CW - 72;
+      gapData.forEach(d => {
+        const c = d.val < 35 ? DANGER : d.val < 65 ? WARN : ACCENT;
+        const gap = 100 - d.val;
+        doc.setFont("helvetica", "normal"); doc.setFontSize(8);
         doc.setTextColor(...INK);
-        doc.text(dimLabels[i], M, y + 4);
-        doc.setFillColor(210, 210, 225);
-        doc.roundedRect(M + 50, y, barW, 5, 2, 2, "F");
-        if (fill > 0) { doc.setFillColor(...c); doc.roundedRect(M + 50, y, fill, 5, 2, 2, "F"); }
-        doc.setFont("helvetica", "bold"); doc.setFontSize(9);
+        doc.text(d.label, M, y + 4);
+        // track (ghost)
+        doc.setFillColor(215, 215, 228);
+        doc.roundedRect(M + 44, y, barW, 5.5, 2, 2, "F");
+        // actual fill
+        if (d.val > 0) {
+          doc.setFillColor(...c);
+          doc.roundedRect(M + 44, y, (d.val / 100) * barW, 5.5, 2, 2, "F");
+        }
+        // score value
+        doc.setFont("helvetica", "bold"); doc.setFontSize(8);
         doc.setTextColor(...c);
-        doc.text(`${val}`, W - M, y + 4, { align: "right" });
+        doc.text(`${d.val}`, M + 44 + barW + 5, y + 4.5);
+        // gap delta
+        doc.setFont("helvetica", "bold"); doc.setFontSize(7.5);
+        doc.setTextColor(...DANGER);
+        doc.text(`-${gap} pts`, W - M, y + 4.5, { align: "right" });
         y += 13;
       });
 
-      y += 4;
-      doc.setDrawColor(220, 220, 230);
-      doc.line(M, y, W - M, y);
-      y += 12;
-
-      doc.setFont("helvetica", "bold"); doc.setFontSize(9);
-      doc.setTextColor(...INK);
-      doc.text("PRIORIDADES DE ACCIÓN", M, y);
+      y += 2;
+      doc.setFont("helvetica", "italic"); doc.setFontSize(6.5);
+      doc.setTextColor(...MUTE);
+      doc.text("Los valores en rojo indican los puntos que faltan para alcanzar el maximo. Son tu oportunidad de diferenciacion.", M, y);
       y += 10;
 
-      const RECS = [
-        { key: "técnico",   val: scores.technical,
-          txt: "Implementa schema.org JSON-LD: Organization, Service y FAQPage. Los motores IA leen datos estructurados antes que texto plano." },
-        { key: "contenido", val: scores.content,
-          txt: "Reestructura tu contenido en formato Q&A con preguntas reales de clientes. Es el formato más citable por modelos generativos." },
-        { key: "autoridad", val: scores.authority,
-          txt: "Aumenta menciones externas: Google Business Profile, directorios del sector y cobertura en medios relevantes de tu industria." },
-        { key: "agéntico",  val: scores.agentic,
-          txt: "Prueba tu visibilidad en ChatGPT, Claude y Perplexity con prompts de tu cliente ideal y documenta los gaps encontrados." },
-        { key: "téc. ux",   val: Math.round((scores.technical * 0.6 + scores.content * 0.4)),
-          txt: "Optimiza Core Web Vitals. Un sitio lento limita la capacidad de los crawlers de IA para indexar y citar tu contenido." },
-      ];
-
-      [...RECS].sort((a, b) => a.val - b.val).slice(0, 3).forEach((r, i) => {
-        doc.setFillColor(...ACCENT);
-        doc.circle(M + 4, y + 2, 4, "F");
-        doc.setFont("helvetica", "bold"); doc.setFontSize(8);
-        doc.setTextColor(255, 255, 255);
-        doc.text(`${i + 1}`, M + 4, y + 4, { align: "center" });
-
-        doc.setFont("helvetica", "bold"); doc.setFontSize(8.5);
-        doc.setTextColor(...INK);
-        doc.text(r.key.toUpperCase(), M + 12, y + 1);
-
-        doc.setFont("helvetica", "normal"); doc.setFontSize(8.5);
-        doc.setTextColor(60, 60, 80);
-        const lines = doc.splitTextToSize(r.txt, CW - 14);
-        doc.text(lines, M + 12, y + 7);
-        y += 8 + lines.length * 4.5 + 4;
-      });
-
-      y += 4;
-      doc.setFillColor(...INK);
-      doc.roundedRect(M, y, CW, 24, 4, 4, "F");
-      doc.setFont("helvetica", "bold"); doc.setFontSize(9);
-      doc.setTextColor(255, 255, 255);
-      doc.text("Siguiente paso: auditoría completa + implementación en 4 semanas", M + 8, y + 9);
-      doc.setFont("helvetica", "normal"); doc.setFontSize(8);
-      doc.setTextColor(...MUTE);
-      doc.text("agentic-friendly.vercel.app  ·  acuba0103@gmail.com", M + 8, y + 18);
-
-      y += 32;
+      // ── PAGE 2: Recomendaciones + CTA ──────────────────────────
+      doc.addPage();
+      doc.setFillColor(...LIGHT); doc.rect(0, 0, W, 297, "F");
+      doc.setFillColor(...INK);   doc.rect(0, 0, W, 11, "F");
+      doc.setFillColor(...ACCENT); doc.rect(0, 11, W, 2, "F");
       doc.setFont("helvetica", "normal"); doc.setFontSize(6.5);
       doc.setTextColor(...MUTE);
+      doc.text("AGENTIC FRIENDLY  |  GEO SCORE  |  " + company, M, 8);
+      y = 22;
+
+      // ── BLOQUE C: Prioridades de accion ───────────────────────
+      doc.setFont("helvetica", "bold"); doc.setFontSize(7);
+      doc.setTextColor(...MUTE);
+      doc.text("PRIORIDADES DE ACCION  |  ORDENADAS POR MAYOR IMPACTO EN TU SCORE", M, y);
+      y += 10;
+
+      const RECS_ALL = [
+        {
+          dim: "AGENTICO", val: scores.agentic,
+          txt: "Prueba ahora mismo: busca en ChatGPT y Perplexity el mejor proveedor de tu servicio en tu ciudad. Si no apareces, tu competencia ya captura ese cliente antes de que tu sitio cargue. Una auditoria agéntica identifica exactamente por donde entrar."
+        },
+        {
+          dim: "CONTENIDO", val: scores.content,
+          txt: "Reestructura tu web con formato Q&A usando preguntas reales de tus clientes. Es el formato mas citado por modelos generativos. Una pagina de preguntas frecuentes bien construida puede duplicar tu visibilidad en LLMs en 30 dias."
+        },
+        {
+          dim: "TECNICO", val: scores.technical,
+          txt: "Implementa schema.org JSON-LD (Organization, Service, FAQPage). Los motores IA leen datos estructurados antes que texto plano. Sin esto, tu contenido es invisible para los crawlers de IA aunque sea excelente."
+        },
+        {
+          dim: "AUTORIDAD", val: scores.authority,
+          txt: "Activa o completa tu Google Business Profile y solicita inclusion en los 3 directorios principales de tu sector. Cada mencion externa valida tu marca ante los indices de IA y eleva tu score de autoridad directamente."
+        },
+      ];
+
+      [...RECS_ALL].sort((a, b) => a.val - b.val).slice(0, 3).forEach((r, i) => {
+        y = checkPage(y, 30);
+        const c = r.val < 35 ? DANGER : r.val < 65 ? WARN : ACCENT;
+        // number circle
+        doc.setFillColor(...ACCENT);
+        doc.circle(M + 5, y + 4, 5, "F");
+        doc.setFont("helvetica", "bold"); doc.setFontSize(9);
+        doc.setTextColor(255, 255, 255);
+        doc.text(`${i + 1}`, M + 5, y + 6, { align: "center" });
+        // dim label
+        doc.setFont("helvetica", "bold"); doc.setFontSize(8.5);
+        doc.setTextColor(...INK);
+        doc.text(r.dim, M + 14, y + 3);
+        // score chip
+        const dW = doc.getTextWidth(r.dim);
+        doc.setFillColor(...c);
+        doc.roundedRect(M + 14 + dW + 3, y - 0.5, 16, 5, 1.5, 1.5, "F");
+        doc.setFont("helvetica", "bold"); doc.setFontSize(6.5);
+        doc.setTextColor(255, 255, 255);
+        doc.text(`${r.val}/100`, M + 14 + dW + 11, y + 3.8, { align: "center" });
+        // recommendation text
+        doc.setFont("helvetica", "normal"); doc.setFontSize(8.5);
+        doc.setTextColor(55, 55, 75);
+        const lines = doc.splitTextToSize(r.txt, CW - 16);
+        doc.text(lines, M + 14, y + 9);
+        y += 9 + lines.length * 4.5 + 7;
+      });
+
+      // ── BLOQUE D: Conversemos CTA ──────────────────────────────
+      y = checkPage(y + 6, 46);
+      const tgUrl = (window.GEO_SCORE_TELEGRAM_URL || "https://t.me/AgenticFriendlyBot")
+        + "?start=geo_" + scores.overall;
+
+      doc.setFillColor(...INK);
+      doc.roundedRect(M, y, CW, 38, 5, 5, "F");
+
+      doc.setFont("helvetica", "bold"); doc.setFontSize(11);
+      doc.setTextColor(255, 255, 255);
+      doc.text("Siguiente paso: auditoria + implementacion en 4 semanas", M + 10, y + 11);
+
+      doc.setFont("helvetica", "normal"); doc.setFontSize(8.5);
+      doc.setTextColor(...MUTE);
+      const ctaLines = doc.splitTextToSize(
+        "Identificamos que implementar, en que orden y con que herramientas para maximizar tu ROI en 30 dias.",
+        CW - 22
+      );
+      doc.text(ctaLines, M + 10, y + 19);
+
+      // Telegram button (clickable en PDF)
+      doc.setFillColor(...ACCENT);
+      doc.roundedRect(M + 10, y + 28, 72, 8, 3, 3, "F");
+      doc.setFont("helvetica", "bold"); doc.setFontSize(8.5);
+      doc.setTextColor(255, 255, 255);
+      doc.text("Conversemos en Telegram  ->", M + 46, y + 33.5, { align: "center" });
+      doc.link(M + 10, y + 28, 72, 8, { url: tgUrl });
+
+      y += 46;
+
+      // Fine print
+      doc.setFont("helvetica", "normal"); doc.setFontSize(6.5);
+      doc.setTextColor(...MUTE);
+      doc.text("agentic-friendly.vercel.app  |  sinapsisinnovadoraperu@gmail.com", M, y);
+      y += 5;
       doc.text(
-        "Reporte diagnóstico inicial basado en las respuestas proporcionadas. Los resultados son indicativos y no constituyen una auditoría técnica completa.",
+        "Reporte diagnostico inicial basado en respuestas del usuario. Resultados indicativos; no constituyen auditoria tecnica completa.",
         M, y, { maxWidth: CW }
       );
 
@@ -263,6 +407,9 @@ function Scanner({ copy }) {
 
   const ENGINES = ["Claude", "ChatGPT", "Perplexity", "Gemini", "Grok"];
 
+  const tgHref = (window.GEO_SCORE_TELEGRAM_URL || "https://t.me/AgenticFriendlyBot")
+    + (scores ? "?start=geo_" + scores.overall : "");
+
   // ─── render ────────────────────────────────────────────────
   return (
     <>
@@ -288,7 +435,7 @@ function Scanner({ copy }) {
             <div className="geo-mhdr">
               <div className="geo-mhdr-left">
                 <div className="geo-mdots"><span/><span/><span/></div>
-                <span className="geo-mtitle mono">GEO SCORE · AGENTIC FIRST</span>
+                <span className="geo-mtitle mono">GEO SCORE · AGENTIC FRIENDLY</span>
               </div>
               {stage === "quiz" && (
                 <div className="geo-mprog-dots">
@@ -478,6 +625,25 @@ function Scanner({ copy }) {
                         </span>
                       </div>
                     </button>
+
+                    {/* Conversemos en Telegram */}
+                    <a
+                      className="geo-mdel-opt geo-mdel-opt--tg"
+                      href={tgHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span className="geo-mdel-opt-ico">✈</span>
+                      <div className="geo-mdel-opt-body">
+                        <span className="geo-mdel-opt-title">
+                          {copy.tgOpt || "Conversemos en Telegram"}
+                        </span>
+                        <span className="geo-mdel-opt-sub mono">
+                          {copy.tgOptSub || "Respuesta en minutos · sin compromiso"}
+                        </span>
+                      </div>
+                      <span className="geo-mdel-opt-arr">→</span>
+                    </a>
                   </div>
 
                   <button className="geo-link-btn" onClick={reset}>
@@ -781,6 +947,7 @@ function Scanner({ copy }) {
           border-radius: 12px;
           text-align: left; cursor: pointer;
           transition: all .18s ease;
+          text-decoration: none;
         }
         .geo-mdel-opt:hover:not(:disabled) {
           background: oklch(0.19 0.018 270);
@@ -796,9 +963,21 @@ function Scanner({ copy }) {
           background: oklch(0.68 0.22 var(--accent-h,285) / 0.12);
           border-radius: 8px; flex-shrink: 0;
         }
-        .geo-mdel-opt-body { display: flex; flex-direction: column; gap: 3px; }
+        .geo-mdel-opt-body { display: flex; flex-direction: column; gap: 3px; flex: 1; }
         .geo-mdel-opt-title { font-size: 14px; font-weight: 500; color: var(--ink-fg); }
         .geo-mdel-opt-sub { font-size: 11px; color: var(--ink-fg-dim); letter-spacing: .04em; }
+        .geo-mdel-opt-arr { color: var(--accent); font-size: 18px; margin-left: auto; }
+
+        /* Telegram option: accent border + subtle glow */
+        .geo-mdel-opt--tg {
+          border-color: oklch(0.68 0.22 var(--accent-h,285) / 0.5);
+          background: oklch(0.68 0.22 var(--accent-h,285) / 0.07);
+        }
+        .geo-mdel-opt--tg:hover {
+          background: oklch(0.68 0.22 var(--accent-h,285) / 0.14);
+          border-color: var(--accent);
+          box-shadow: 0 8px 32px oklch(0.68 0.22 var(--accent-h,285) / 0.25);
+        }
 
         /* ── EMAIL ──────────────────────────────────── */
         .geo-memail { display: flex; flex-direction: column; align-items: center; gap: 0; text-align: center; }

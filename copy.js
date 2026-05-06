@@ -145,6 +145,8 @@ window.COPY = {
       emailPlaceholder: "tu@empresa.com",
       emailCta: "Enviar reporte",
       emailSent: "¡Listo! Te contactamos pronto.",
+      tgOpt: "Conversemos en Telegram",
+      tgOptSub: "Respuesta en minutos · sin compromiso",
       back: "Volver",
       close: "Cerrar",
       questions: [
@@ -413,6 +415,8 @@ window.COPY = {
       emailPlaceholder: "you@company.com",
       emailCta: "Send report",
       emailSent: "Done! We'll reach out soon.",
+      tgOpt: "Let's talk on Telegram",
+      tgOptSub: "Reply in minutes · no commitment",
       back: "Back",
       close: "Close",
       questions: [
