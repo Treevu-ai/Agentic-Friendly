@@ -136,7 +136,7 @@ function Metrics({ copy }) {
 function Pillars({ copy }) {
   const [hovered, setHovered] = useStateX(null);
   return (
-    <section className="section section--ink" data-screen-label="04 Pillars">
+    <section id="section-producto" className="section section--ink" data-screen-label="04 Pillars">
       <span className="section-tag">[ 03 / METHOD ]</span>
       <div className="hud-line"/>
       <div className="container">
@@ -262,7 +262,7 @@ function Timeline({ copy }) {
   }, []);
 
   return (
-    <section className="section section--ink-1" data-screen-label="05 Timeline" ref={ref}>
+    <section id="section-proceso" className="section section--ink-1" data-screen-label="05 Timeline" ref={ref}>
       <span className="section-tag">[ 04 / PROCESS ]</span>
       <div className="hud-line"/>
       <div className="container">
@@ -384,7 +384,7 @@ function Cases({ copy }) {
   const items = copy.items[active] || [];
 
   return (
-    <section className="section section--ink" data-screen-label="06 Cases">
+    <section id="section-faq" className="section section--ink" data-screen-label="06 Cases">
       <span className="section-tag">[ 05 / CASES ]</span>
       <div className="hud-line"/>
       <div className="container">
@@ -519,7 +519,7 @@ function Cases({ copy }) {
 /* ─────────────────────────────────────────── Pricing */
 function Pricing({ copy }) {
   return (
-    <section className="section section--ink-1" data-screen-label="08 Pricing">
+    <section id="section-planes" className="section section--ink-1" data-screen-label="08 Pricing">
       <span className="section-tag">[ 07 / PRICING ]</span>
       <div className="hud-line"/>
       <div className="container">
@@ -547,7 +547,8 @@ function Pricing({ copy }) {
                   </>
                 )}
               </div>
-              <button className={`plan-cta ${p.highlight ? "plan-cta--hl" : ""}`}>
+              <button className={`plan-cta ${p.highlight ? "plan-cta--hl" : ""}`}
+                onClick={() => window.openGEOScanner?.()}>
                 {p.cta}<span className="arr">→</span>
               </button>
               <div className="plan-feats">
@@ -666,7 +667,8 @@ function FinalCTA({ copy }) {
           {copy.pre} <span className="shimmer" style={{ display: "inline-block" }}>{copy.accent}</span>
         </h2>
         <div className="final-sub">{copy.sub}</div>
-        <button className="btn btn--accent" style={{ padding: "20px 36px", fontSize: 16 }}>
+        <button className="btn btn--accent" style={{ padding: "20px 36px", fontSize: 16 }}
+          onClick={() => window.openGEOScanner?.()}>
           {copy.cta}<span className="arr">→</span>
         </button>
         <div className="final-meta mono">{copy.meta}</div>

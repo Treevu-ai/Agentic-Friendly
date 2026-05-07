@@ -2,7 +2,7 @@
    CTA button → modal overlay → 5-question quiz one-by-one → delivery choice (PDF | email | Telegram)
    Bilingual via copy.scanner */
 
-const { useState: useQ, useEffect: useQE } = React;
+const { useState: useQ, useEffect: useQE, useRef: useQR } = React;
 
 function Scanner({ copy }) {
   const [open,       setOpen]       = useQ(false);
@@ -16,9 +16,16 @@ function Scanner({ copy }) {
   const [pdfBusy,    setPdfBusy]    = useQ(false);
   const [email,      setEmail]      = useQ("");
   const [emailBusy,  setEmailBusy]  = useQ(false);
+  const modalBodyRef = useQR(null);
 
   const questions = copy.questions || [];
   const total     = questions.length;
+
+  // Expose openModal globally so external buttons (Nav, Hero, Pricing) can trigger it
+  useQE(() => {
+    window.openGEOScanner = () => setOpen(true);
+    return () => { delete window.openGEOScanner; };
+  }, []);
 
   // ─── score model (calibrado v2) ────────────────────────────
   // Pesos derivados de regresión sobre 35 empresas peruanas:
@@ -52,6 +59,11 @@ function Scanner({ copy }) {
     document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [open]);
+
+  // Scroll modal body to top on question change
+  useQE(() => {
+    if (modalBodyRef.current) modalBodyRef.current.scrollTop = 0;
+  }, [qIdx]);
 
   // ─── flow ──────────────────────────────────────────────────
   function startQuiz() {
@@ -451,7 +463,7 @@ function Scanner({ copy }) {
             </div>
 
             {/* Modal body */}
-            <div className="geo-mbody">
+            <div className="geo-mbody" ref={modalBodyRef}>
 
               {/* ── INTRO ── */}
               {stage === "intro" && (
@@ -490,7 +502,7 @@ function Scanner({ copy }) {
 
               {/* ── QUIZ ── */}
               {stage === "quiz" && (
-                <div className="geo-mquiz">
+                <div className="geo-mquiz" key={qIdx}>
                   <div className="geo-mq-bar-wrap">
                     <div
                       className="geo-mq-bar-fill"

@@ -80,6 +80,13 @@ function App() {
   );
 }
 
+// Section IDs — must match id="" attributes in sections.jsx
+const NAV_SECTION_IDS = ["section-producto", "section-proceso", "section-planes", "section-faq"];
+function scrollTo(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function openScanner() { window.openGEOScanner?.(); }
+
 /* ────────────────────── Nav */
 function Nav({ copy, lang, setLang }) {
   const [open, setOpen] = useS(false);
@@ -94,7 +101,10 @@ function Nav({ copy, lang, setLang }) {
       </div>
       <div className="nav-links">
         {copy.nav.links.map((l, i) => (
-          <a key={i} href="#">{l}</a>
+          <a key={i} href={`#${NAV_SECTION_IDS[i]}`}
+            onClick={e => { e.preventDefault(); scrollTo(NAV_SECTION_IDS[i]); }}>
+            {l}
+          </a>
         ))}
       </div>
       <div className="nav-right">
@@ -102,7 +112,7 @@ function Nav({ copy, lang, setLang }) {
           <button onClick={() => setLang("es")} className={lang === "es" ? "is-on" : ""}>ES</button>
           <button onClick={() => setLang("en")} className={lang === "en" ? "is-on" : ""}>EN</button>
         </div>
-        <button className="btn btn--accent" style={{ padding: "8px 14px", fontSize: 12 }}>
+        <button className="btn btn--accent" style={{ padding: "8px 14px", fontSize: 12 }} onClick={openScanner}>
           {copy.nav.cta} <span className="arr">→</span>
         </button>
         <button className="nav-burger" onClick={() => setOpen(o => !o)} aria-label="Menu">
@@ -112,14 +122,18 @@ function Nav({ copy, lang, setLang }) {
       {open && (
         <div className="nav-mobile-menu">
           {copy.nav.links.map((l, i) => (
-            <a key={i} href="#" onClick={() => setOpen(false)}>{l}</a>
+            <a key={i} href={`#${NAV_SECTION_IDS[i]}`}
+              onClick={e => { e.preventDefault(); scrollTo(NAV_SECTION_IDS[i]); setOpen(false); }}>
+              {l}
+            </a>
           ))}
           <div className="nav-mobile-bottom">
             <div className="nav-toggle">
               <button onClick={() => { setLang("es"); }} className={lang === "es" ? "is-on" : ""}>ES</button>
               <button onClick={() => { setLang("en"); }} className={lang === "en" ? "is-on" : ""}>EN</button>
             </div>
-            <button className="btn btn--accent" style={{ padding: "10px 16px", fontSize: 13, width: "100%" }}>
+            <button className="btn btn--accent" style={{ padding: "10px 16px", fontSize: 13, width: "100%" }}
+              onClick={() => { openScanner(); setOpen(false); }}>
               {copy.nav.cta} <span className="arr">→</span>
             </button>
           </div>
@@ -171,10 +185,10 @@ function Hero({ copy }) {
           </h1>
           <p className="hero-sub">{copy.subhead}</p>
           <div className="hero-ctas">
-            <button className="btn btn--accent">
+            <button className="btn btn--accent" onClick={openScanner}>
               {copy.cta1}<span className="arr">→</span>
             </button>
-            <button className="btn btn--ghost">
+            <button className="btn btn--ghost" onClick={() => scrollTo("section-proceso")}>
               ▶ &nbsp;{copy.cta2}
             </button>
           </div>
@@ -338,7 +352,7 @@ function Hero({ copy }) {
 /* ────────────────────── Scanner section wrapper */
 function ScannerSection({ copy }) {
   return (
-    <section className="section section--lg section--ink scanner-section" data-screen-label="07 Scanner">
+    <section id="section-scanner" className="section section--lg section--ink scanner-section" data-screen-label="07 Scanner">
       <span className="section-tag">[ 06 / TOOL ]</span>
       <div className="hud-line"/>
       <div className="container" style={{ position: "relative" }}>
