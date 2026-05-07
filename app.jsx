@@ -37,7 +37,7 @@ function App() {
   return (
     <div>
       <Nav copy={c} lang={lang} setLang={(v) => setTweak("lang", v)} />
-      <Hero copy={c.hero} />
+      <Hero copy={c.hero} lang={lang} />
       {t.showTicker && <Marquee text={c.ticker} />}
       <Metrics copy={c.metrics} />
       <Pillars copy={c.pillars} />
@@ -144,7 +144,7 @@ function Nav({ copy, lang, setLang }) {
 }
 
 /* ────────────────────── Hero */
-function Hero({ copy }) {
+function Hero({ copy, lang }) {
   const videoRef = useR(null);
   useE(() => {
     if (videoRef.current) videoRef.current.playbackRate = 1.0;
@@ -207,7 +207,7 @@ function Hero({ copy }) {
           </div>
         </div>
         <div className="hero-right">
-          <HeroConsole copy={copy.console} />
+          <HeroConsole key={lang} copy={copy.console} />
           <div className="hero-console-tag mono">
             <span className="tag-line"/>
             LIVE.SIMULATION

@@ -39,6 +39,7 @@ function Marquee({ text, engines }) {
           padding-right: 32px;
         }
         .marquee-item { display: inline-flex; align-items: center; gap: 32px; font-size: 32px; }
+        @media (max-width: 600px) { .marquee-item { font-size: 22px; gap: 20px; } .marquee-group { gap: 20px; padding-right: 20px; } }
         .marquee-text { color: var(--ink-fg); font-weight: 500; letter-spacing: -0.02em; }
         .marquee-dot { color: var(--accent); }
         @keyframes marquee { from { transform: none; } to { transform: translateX(-50%); } }
@@ -106,8 +107,9 @@ function Metrics({ copy }) {
           position: absolute; top: 18px; right: 18px;
           font-size: 10px; color: var(--cream-fg-dim); letter-spacing: .14em;
         }
+        @media (max-width: 800px) { .metric-tag { right: 0; } }
         .metric-key {
-          font-size: clamp(56px, 7vw, 96px);
+          font-size: clamp(48px, 7vw, 96px);
           font-weight: 500;
           letter-spacing: -0.04em;
           line-height: 1;
@@ -173,7 +175,7 @@ function Pillars({ copy }) {
         .pillars-grid {
           display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
         }
-        @media (max-width: 900px) { .pillars-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .pillars-grid { grid-template-columns: 1fr; gap: 12px; } }
         .pillar {
           position: relative;
           padding: 40px 32px 80px;
@@ -184,6 +186,7 @@ function Pillars({ copy }) {
           transition: all .4s var(--ease);
           cursor: default;
         }
+        @media (max-width: 900px) { .pillar { min-height: 0; padding: 32px 24px 56px; } }
         .pillar.is-on {
           background: linear-gradient(180deg, oklch(0.21 0.020 270) 0%, oklch(0.16 0.018 270) 100%);
           border-color: oklch(0.68 0.22 var(--accent-h) / 0.5);
@@ -191,7 +194,9 @@ function Pillars({ copy }) {
           box-shadow: 0 30px 60px -20px oklch(0 0 0 / 0.5),
                       0 0 0 1px oklch(0.68 0.22 var(--accent-h) / 0.2);
         }
+        @media (max-width: 900px) { .pillar.is-on { transform: none; } }
         .pillar.is-off { opacity: .55; }
+        @media (max-width: 900px) { .pillar.is-off { opacity: 1; } }
         .pillar-num {
           font-size: 64px;
           font-weight: 500;
@@ -201,6 +206,7 @@ function Pillars({ copy }) {
           margin-bottom: 24px;
           transition: color .3s;
         }
+        @media (max-width: 600px) { .pillar-num { font-size: 48px; margin-bottom: 16px; } }
         .pillar.is-on .pillar-num { color: var(--accent); }
         .pillar-tag {
           font-size: 10px;
@@ -220,6 +226,7 @@ function Pillars({ copy }) {
           color: var(--ink-fg);
           margin-bottom: 14px;
         }
+        @media (max-width: 600px) { .pillar-title { font-size: 20px; } }
         .pillar-desc {
           font-size: 14px;
           line-height: 1.55;
@@ -301,7 +308,7 @@ function Timeline({ copy }) {
         }
         @media (max-width: 800px) { .timeline-head { grid-template-columns: 1fr; gap: 18px; margin-bottom: 36px; } }
         .timeline-track { position: relative; padding-left: 76px; }
-        @media (max-width: 800px) { .timeline-track { padding-left: 56px; } }
+        @media (max-width: 600px) { .timeline-track { padding-left: 52px; } }
         .timeline-rail {
           position: absolute;
           left: 27px;
@@ -310,7 +317,7 @@ function Timeline({ copy }) {
           background: var(--ink-line);
           overflow: hidden;
         }
-        @media (max-width: 800px) { .timeline-rail { left: 19px; } }
+        @media (max-width: 600px) { .timeline-rail { left: 19px; } }
         .timeline-rail-fill {
           position: absolute;
           top: 0; left: 0; right: 0;
@@ -322,6 +329,7 @@ function Timeline({ copy }) {
           position: relative;
           padding-bottom: 64px;
         }
+        @media (max-width: 600px) { .tl-step { padding-bottom: 44px; } }
         .tl-step:last-child { padding-bottom: 0; }
         .tl-node {
           position: absolute;
@@ -335,8 +343,8 @@ function Timeline({ copy }) {
           place-items: center;
           transition: all .4s var(--ease);
         }
-        @media (max-width: 800px) {
-          .tl-node { left: -56px; width: 40px; height: 40px; }
+        @media (max-width: 600px) {
+          .tl-node { left: -52px; width: 40px; height: 40px; }
         }
         .tl-step.is-on .tl-node {
           background: var(--accent);
@@ -350,6 +358,7 @@ function Timeline({ copy }) {
           letter-spacing: .04em;
           transition: color .3s;
         }
+        @media (max-width: 600px) { .tl-node-inner { font-size: 10px; } }
         .tl-step.is-on .tl-node-inner { color: var(--accent-fg); }
         .tl-week {
           font-size: 11px;
@@ -360,7 +369,7 @@ function Timeline({ copy }) {
         }
         .tl-step.is-on .tl-week { color: var(--accent); }
         .tl-title {
-          font-size: 30px;
+          font-size: clamp(20px, 3vw, 30px);
           font-weight: 500;
           letter-spacing: -0.02em;
           margin-bottom: 10px;
@@ -372,6 +381,7 @@ function Timeline({ copy }) {
           color: var(--ink-fg-mute);
           max-width: 56ch;
         }
+        @media (max-width: 600px) { .tl-desc { font-size: 13px; } }
       `}</style>
     </section>
   );
@@ -466,7 +476,7 @@ function Cases({ copy }) {
           display: grid; grid-template-columns: 1fr 1fr; gap: 0;
           border-top: 1px solid var(--ink-line);
         }
-        @media (max-width: 800px) { .cases-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 720px) { .cases-grid { grid-template-columns: 1fr; } }
         .case-card {
           padding: 32px;
           border-right: 1px solid var(--ink-line);
@@ -475,10 +485,11 @@ function Cases({ copy }) {
           animation: rise .5s var(--ease) both;
           transition: background .3s;
         }
+        @media (max-width: 600px) { .case-card { padding: 24px 20px; } }
         .case-card:nth-child(2n) { border-right: 0; }
-        @media (max-width: 800px) { .case-card { border-right: 0; } }
+        @media (max-width: 720px) { .case-card { border-right: 0; } }
         .case-card:hover { background: var(--ink-1); }
-        .case-card-top { margin-bottom: 32px; }
+        .case-card-top { margin-bottom: 24px; }
         .case-cat {
           font-size: 10px;
           letter-spacing: .14em;
@@ -487,15 +498,16 @@ function Cases({ copy }) {
           margin-bottom: 12px;
         }
         .case-q {
-          font-size: 16px;
+          font-size: 15px;
           color: var(--ink-fg);
           line-height: 1.4;
           font-style: italic;
           max-width: 32ch;
         }
-        .case-result { display: flex; align-items: baseline; gap: 16px; }
+        @media (max-width: 600px) { .case-q { font-size: 13px; } }
+        .case-result { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
         .case-r {
-          font-size: 56px;
+          font-size: clamp(38px, 6vw, 56px);
           font-weight: 500;
           letter-spacing: -0.04em;
           color: var(--accent);
@@ -566,6 +578,7 @@ function Pricing({ copy }) {
 
       <style>{`
         .pricing-head { text-align: center; margin: 0 auto 64px; max-width: 720px; }
+        @media (max-width: 600px) { .pricing-head { margin-bottom: 40px; } }
         .pricing-head h2 { margin-left: auto; margin-right: auto; }
         .pricing-sub { color: var(--ink-fg-mute); font-size: 16px; }
         .pricing-grid {
@@ -574,7 +587,7 @@ function Pricing({ copy }) {
           gap: 16px;
           align-items: stretch;
         }
-        @media (max-width: 900px) { .pricing-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .pricing-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; } }
         .plan {
           background: var(--ink-0);
           border: 1px solid var(--ink-line);
@@ -584,6 +597,7 @@ function Pricing({ copy }) {
           position: relative;
           transition: all .3s var(--ease);
         }
+        @media (max-width: 600px) { .plan { padding: 28px 20px; } }
         .plan:hover { border-color: var(--ink-fg-dim); }
         .plan--hl {
           background: linear-gradient(180deg,
@@ -594,6 +608,8 @@ function Pricing({ copy }) {
                       0 30px 60px -20px oklch(0 0 0 / 0.5);
           transform: translateY(-8px);
         }
+        /* On single-column mobile, lift effect breaks layout */
+        @media (max-width: 900px) { .plan--hl { transform: none; } }
         .plan-tag {
           position: absolute;
           top: -10px; left: 30px;
@@ -622,6 +638,7 @@ function Pricing({ copy }) {
         }
         .plan-price-cur { color: var(--accent); font-size: 13px; font-weight: 600; letter-spacing: 0.16em; align-self: flex-start; margin-top: 14px; padding: 3px 7px; border: 1px solid var(--accent); border-radius: 4px; background: var(--accent-soft); }
         .plan-price-num { font-size: 56px; font-weight: 500; letter-spacing: -0.04em; line-height: 1; color: var(--ink-fg); }
+        @media (max-width: 400px) { .plan-price-num { font-size: 44px; } }
         .plan-price-per { color: var(--ink-fg-dim); font-size: 12px; margin-left: 4px; }
         .plan-cta {
           width: 100%;
@@ -663,7 +680,7 @@ function FinalCTA({ copy }) {
       <div className="final-cta-bg"/>
       <div className="container container--narrow" style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
         <div className="eyebrow eyebrow-dot" style={{ marginBottom: 24 }}>{copy.tag}</div>
-        <h2 className="h-display" style={{ fontSize: "clamp(56px, 9vw, 144px)", marginBottom: 32, lineHeight: 0.95 }}>
+        <h2 className="h-display" style={{ fontSize: "clamp(40px, 9vw, 144px)", marginBottom: 32, lineHeight: 0.95 }}>
           {copy.pre} <span className="shimmer" style={{ display: "inline-block" }}>{copy.accent}</span>
         </h2>
         <div className="final-sub">{copy.sub}</div>
@@ -687,7 +704,7 @@ function FinalCTA({ copy }) {
           filter: blur(40px);
         }
         .final-sub {
-          font-size: 18px;
+          font-size: clamp(14px, 2vw, 18px);
           line-height: 1.5;
           color: var(--ink-fg-mute);
           max-width: 56ch;
@@ -749,9 +766,9 @@ function Footer({ copy }) {
           padding-bottom: 64px;
           border-bottom: 1px solid var(--ink-line);
         }
-        @media (max-width: 900px) { .footer-top { grid-template-columns: 1fr; gap: 32px; } }
+        @media (max-width: 900px) { .footer-top { grid-template-columns: 1fr; gap: 32px; padding-bottom: 40px; } }
         .footer-mark {
-          font-size: 36px;
+          font-size: clamp(24px, 4vw, 36px);
           font-weight: 500;
           letter-spacing: -0.04em;
           line-height: 0.95;
@@ -768,7 +785,8 @@ function Footer({ copy }) {
           grid-template-columns: repeat(4, 1fr);
           gap: 24px;
         }
-        @media (max-width: 720px) { .footer-cols { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 720px) { .footer-cols { grid-template-columns: repeat(2, 1fr); gap: 20px; } }
+        @media (max-width: 400px) { .footer-cols { grid-template-columns: 1fr 1fr; gap: 16px; } }
         .footer-col { display: flex; flex-direction: column; gap: 10px; }
         .footer-col-h {
           font-size: 10px;
