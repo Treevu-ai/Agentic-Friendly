@@ -201,7 +201,7 @@ function AnswerBlock({ engine, copy }) {
       <div style={{ color: "var(--ink-fg)", lineHeight: 1.55, marginBottom: 14 }}>
         <span style={{ color: "var(--ink-fg-mute)" }}>{pre}</span>
         <span className="brand-cite" style={{
-          background: "color-mix(in srgb, var(--accent-soft) 75%, white 25%)",
+          background: "color-mix(in srgb, var(--accent-soft) 70%, white 30%)",
           color: "var(--ink-fg)",
           padding: "2px 8px",
           borderRadius: 4,
@@ -232,7 +232,7 @@ function AnswerBlock({ engine, copy }) {
             border: "1px solid var(--ink-line)",
             borderRadius: 4,
             color: i === 0 ? "var(--accent)" : "var(--ink-fg-mute)",
-            background: i === 0 ? "color-mix(in srgb, var(--accent-soft) 72%, white 28%)" : "rgba(255,255,255,0.04)",
+            background: i === 0 ? "color-mix(in srgb, var(--accent-soft) 70%, white 30%)" : "rgba(255,255,255,0.04)",
           }}>
             <span style={{ marginRight: 4, opacity: .6 }}>{i+1}</span>
             {s}
