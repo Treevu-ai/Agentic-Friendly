@@ -281,7 +281,7 @@ window.COPY = {
     hero: {
       pill: "A SINAPSIS INNOVADORA S.A.C. product · Peru · LatAm",
       headline_pre: "Don't lose your ranking.",
-      headline_accent: "Make your site",
+      headline_accent: "Make your website",
       headline_post: "agentic-friendly.",
       subhead: "We combine GEO + Agentic Readiness so your site is understandable to both humans and AI agents: semantic structure, clear data, and visibility on ChatGPT, Claude, Perplexity, Grok and Gemini — without sacrificing SEO.",
       cta1: "Start GEO Score",
