@@ -79,13 +79,13 @@ function HeroConsole({ copy }) {
 
   return (
     <div className="hero-console" style={{
-      background: "oklch(0.16 0.018 270 / 0.85)",
+      background: "linear-gradient(180deg, oklch(0.19 0.02 270 / 0.96), oklch(0.13 0.018 270 / 0.98))",
       backdropFilter: "blur(20px)",
       WebkitBackdropFilter: "blur(20px)",
-      "--ink-fg": "rgba(255,255,255,0.96)",
-      "--ink-fg-mute": "rgba(255,255,255,0.78)",
-      "--ink-fg-dim": "rgba(255,255,255,0.58)",
-      "--ink-line": "rgba(255,255,255,0.18)",
+      "--ink-fg": "rgba(255,255,255,0.98)",
+      "--ink-fg-mute": "rgba(255,255,255,0.9)",
+      "--ink-fg-dim": "rgba(255,255,255,0.72)",
+      "--ink-line": "rgba(255,255,255,0.24)",
       border: "1px solid var(--ink-line)",
       borderRadius: "var(--r-lg)",
       overflow: "hidden",
@@ -93,14 +93,14 @@ function HeroConsole({ copy }) {
       fontSize: 13,
       width: "100%",
       maxWidth: 540,
-      boxShadow: "0 30px 80px -20px oklch(0 0 0 / 0.5), 0 0 0 1px oklch(0.30 0.020 270 / 0.3)",
+      boxShadow: "0 30px 80px -20px oklch(0 0 0 / 0.55), 0 0 0 1px oklch(0.42 0.03 270 / 0.32)",
     }}>
       {/* console chrome */}
       <div style={{
         display: "flex", alignItems: "center", gap: 10,
         padding: "10px 14px",
         borderBottom: "1px solid var(--ink-line)",
-        background: "oklch(0.18 0.020 270)",
+        background: "oklch(0.22 0.022 270 / 0.96)",
       }}>
         <EngineMark e={engine} size={20} />
         <div style={{ fontSize: 12, color: "var(--ink-fg-mute)" }}>
@@ -117,7 +117,10 @@ function HeroConsole({ copy }) {
       </div>
 
       {/* user message */}
-      <div style={{ padding: "20px 18px 10px" }}>
+      <div style={{
+        padding: "20px 18px 10px",
+        background: "linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))",
+      }}>
         <div style={{ fontSize: 10, color: "var(--ink-fg-dim)", letterSpacing: ".1em", marginBottom: 6 }}>
           USER
         </div>
@@ -132,12 +135,12 @@ function HeroConsole({ copy }) {
       </div>
 
       {/* response area */}
-      <div style={{
-        padding: "12px 18px 22px",
-        borderTop: "1px solid var(--ink-line)",
-        background: "oklch(0.15 0.018 270)",
-        minHeight: 140,
-      }}>
+        <div style={{
+          padding: "12px 18px 22px",
+          borderTop: "1px solid var(--ink-line)",
+          background: "linear-gradient(180deg, oklch(0.17 0.018 270 / 0.98), oklch(0.14 0.018 270 / 0.99))",
+          minHeight: 140,
+        }}>
         <div style={{
           fontSize: 10, color: "var(--ink-fg-dim)", letterSpacing: ".1em",
           marginBottom: 8, display: "flex", alignItems: "center", gap: 8,
@@ -198,12 +201,12 @@ function AnswerBlock({ engine, copy }) {
       <div style={{ color: "var(--ink-fg)", lineHeight: 1.55, marginBottom: 14 }}>
         <span style={{ color: "var(--ink-fg-mute)" }}>{pre}</span>
         <span className="brand-cite" style={{
-          background: "var(--accent-soft)",
+          background: "color-mix(in srgb, var(--accent-soft) 75%, white 25%)",
           color: "var(--ink-fg)",
           padding: "2px 8px",
           borderRadius: 4,
           fontWeight: 600,
-          boxShadow: "0 0 0 1px oklch(0.68 0.22 var(--accent-h) / 0.4)",
+          boxShadow: "0 0 0 1px oklch(0.76 0.24 var(--accent-h) / 0.55)",
           position: "relative",
         }}>
           [YOUR BRAND]
@@ -229,7 +232,7 @@ function AnswerBlock({ engine, copy }) {
             border: "1px solid var(--ink-line)",
             borderRadius: 4,
             color: i === 0 ? "var(--accent)" : "var(--ink-fg-mute)",
-            background: i === 0 ? "var(--accent-soft)" : "transparent",
+            background: i === 0 ? "color-mix(in srgb, var(--accent-soft) 72%, white 28%)" : "rgba(255,255,255,0.04)",
           }}>
             <span style={{ marginRight: 4, opacity: .6 }}>{i+1}</span>
             {s}
