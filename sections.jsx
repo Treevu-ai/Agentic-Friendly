@@ -39,7 +39,7 @@ function Marquee({ text, engines }) {
           padding-right: 32px;
         }
         .marquee-item { display: inline-flex; align-items: center; gap: 32px; font-size: 28px; }
-        .marquee-text { color: var(--c-ink, #212121); font-weight: 400; letter-spacing: -0.02em; }
+        .marquee-text { color: var(--ink-fg); font-weight: 400; letter-spacing: -0.02em; }
         .marquee-dot { color: var(--c-coral); }
         @keyframes marquee { from { transform: none; } to { transform: translateX(-50%); } }
       `}</style>
@@ -185,7 +185,7 @@ function Pillars({ copy }) {
         }
         .pillar.is-on {
           background: rgba(255,255,255,0.12);
-          border-color: rgba(255,119,89,0.45);
+          border-color: var(--c-coral-soft);
           transform: translateY(-4px);
           box-shadow: 0 16px 48px rgba(0,0,0,0.24);
         }

@@ -19,10 +19,12 @@ function App() {
   // accent hue — shift the coral accent dynamically
   useE(() => {
     const h = t.accentHue;
+    const sat = "90%";
+    const lit = "60%";
     document.documentElement.style.setProperty("--accent-h", h);
-    document.documentElement.style.setProperty("--accent", `hsl(${h}, 90%, 60%)`);
-    document.documentElement.style.setProperty("--accent-soft", `hsla(${h}, 90%, 60%, 0.14)`);
-    document.documentElement.style.setProperty("--c-coral", `hsl(${h}, 90%, 60%)`);
+    document.documentElement.style.setProperty("--accent", `hsl(${h}, ${sat}, ${lit})`);
+    document.documentElement.style.setProperty("--accent-soft", `hsla(${h}, ${sat}, ${lit}, 0.14)`);
+    document.documentElement.style.setProperty("--c-coral", `hsl(${h}, ${sat}, ${lit})`);
   }, [t.accentHue]);
 
   // density
