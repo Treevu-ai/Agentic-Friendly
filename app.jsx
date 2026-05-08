@@ -3,7 +3,7 @@
 const { useState: useS, useEffect: useE, useRef: useR } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "lang": "es",
+  "lang": "en",
   "accentHue": 20,
   "density": "regular",
   "showTicker": true,
