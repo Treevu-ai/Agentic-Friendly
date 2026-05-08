@@ -47,11 +47,15 @@ function App() {
         <div className="announce-bar">
           <span>{lang === "en" ? "🚀 Now supporting 10+ AI engines — fully agentic by 2027." : "🚀 Ahora compatible con 10+ motores IA — 100% agéntico para 2027."}</span>
           <a href="#section-producto">{lang === "en" ? "Learn more" : "Saber más"}</a>
-          <button className="announce-bar-close" onClick={() => setAnnounceOpen(false)} aria-label="Close">✕</button>
+          <button
+            className="announce-bar-close"
+            onClick={() => setAnnounceOpen(false)}
+            aria-label={lang === "en" ? "Close announcement" : "Cerrar anuncio"}
+          >✕</button>
         </div>
       )}
       <Nav copy={c} lang={lang} setLang={(v) => setTweak("lang", v)} />
-      <Hero copy={c.hero} lang={lang} />
+      <Hero key={lang} copy={c.hero} lang={lang} />
       {t.showTicker && <Marquee text={c.ticker} />}
       <Metrics copy={c.metrics} />
       <Pillars copy={c.pillars} />
@@ -129,7 +133,7 @@ function Nav({ copy, lang, setLang }) {
         <button className="btn btn--accent" style={{ padding: "10px 20px", fontSize: 13 }} onClick={openScanner}>
           {copy.nav.cta} <span className="arr">→</span>
         </button>
-        <button className="nav-burger" onClick={() => setOpen(o => !o)} aria-label="Menu">
+        <button className="nav-burger" onClick={() => setOpen(o => !o)} aria-label={lang === "en" ? "Menu" : "Menú"}>
           {open ? "✕" : "☰"}
         </button>
       </div>
@@ -163,6 +167,9 @@ function Hero({ copy, lang }) {
   useE(() => {
     if (videoRef.current) videoRef.current.playbackRate = 1.0;
   }, []);
+  useE(() => {
+    window.__AF_refreshHeroHeadline?.();
+  }, [lang]);
   return (
     <section className="hero" data-screen-label="01 Hero">
       <div className="hero-bg">

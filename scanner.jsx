@@ -459,7 +459,7 @@ function Scanner({ copy }) {
                   ))}
                 </div>
               )}
-              <button className="geo-mclose" onClick={closeModal} aria-label="Cerrar">✕</button>
+              <button className="geo-mclose" onClick={closeModal} aria-label={copy.close || "Cerrar"}>✕</button>
             </div>
 
             {/* Modal body */}
@@ -750,6 +750,9 @@ function Scanner({ copy }) {
 
         /* ── Modal shell ────────────────────────────── */
         .geo-modal {
+          --geo-fg: rgba(255,255,255,0.96);
+          --geo-fg-mute: rgba(255,255,255,0.78);
+          --geo-fg-dim: rgba(255,255,255,0.58);
           background: oklch(0.13 0.016 270);
           border: 1px solid oklch(0.26 0.020 270);
           border-radius: 16px;
@@ -784,16 +787,16 @@ function Scanner({ copy }) {
           width: 9px; height: 9px; border-radius: 50%;
           background: oklch(0.28 0.020 270);
         }
-        .geo-mtitle { font-size: 10px; color: var(--ink-fg-dim); letter-spacing: .10em; }
+        .geo-mtitle { font-size: 10px; color: var(--geo-fg-dim); letter-spacing: .10em; }
         .geo-mclose {
           margin-left: auto;
-          font-size: 14px; color: var(--ink-fg-dim);
+          font-size: 14px; color: var(--geo-fg-mute);
           width: 28px; height: 28px;
           display: flex; align-items: center; justify-content: center;
           border-radius: 50%;
           transition: background .15s, color .15s;
         }
-        .geo-mclose:hover { background: oklch(0.22 0.018 270); color: var(--ink-fg); }
+        .geo-mclose:hover { background: oklch(0.22 0.018 270); color: var(--geo-fg); }
 
         /* progress dots */
         .geo-mprog-dots {
@@ -820,15 +823,15 @@ function Scanner({ copy }) {
         @keyframes geo-pulse { 0%,100%{opacity:1}50%{opacity:.6} }
         .geo-mint-title {
           font-family: var(--f-display); font-size: clamp(20px,3vw,26px);
-          font-weight: 600; color: var(--ink-fg); line-height: 1.25;
+          font-weight: 600; color: var(--geo-fg); line-height: 1.25;
           margin: 0 0 12px;
         }
         .geo-mint-sub {
-          font-size: 14px; color: var(--ink-fg-mute); line-height: 1.55;
+          font-size: 14px; color: var(--geo-fg-mute); line-height: 1.55;
           margin: 0 0 24px;
         }
         .geo-mint-label {
-          font-size: 10px; color: var(--ink-fg-dim); letter-spacing: .14em;
+          font-size: 10px; color: var(--geo-fg-dim); letter-spacing: .14em;
           text-transform: uppercase; margin-bottom: 8px; display: block;
         }
         .geo-mint-irow {
@@ -841,11 +844,11 @@ function Scanner({ copy }) {
         .geo-mint-prompt { color: var(--accent); font-size: 16px; font-weight: 700; }
         .geo-mint-input {
           flex: 1; background: transparent; border: 0; outline: 0;
-          color: var(--ink-fg); font-size: 15px; caret-color: var(--accent);
+          color: var(--geo-fg); font-size: 15px; caret-color: var(--accent);
         }
-        .geo-mint-input::placeholder { color: var(--ink-fg-dim); }
+        .geo-mint-input::placeholder { color: var(--geo-fg-dim); }
         .geo-mint-cta { width: 100%; justify-content: center; padding: 13px; font-size: 15px; margin-bottom: 14px; }
-        .geo-mint-meta { font-size: 10px; color: var(--ink-fg-dim); letter-spacing: .06em; text-align: center; margin: 0; }
+        .geo-mint-meta { font-size: 10px; color: var(--geo-fg-dim); letter-spacing: .06em; text-align: center; margin: 0; }
 
         /* ── QUIZ ───────────────────────────────────── */
         .geo-mquiz { display: flex; flex-direction: column; gap: 0; }
@@ -860,14 +863,14 @@ function Scanner({ copy }) {
         }
         .geo-mq-meta {
           display: flex; justify-content: space-between;
-          font-size: 10px; color: var(--ink-fg-dim); letter-spacing: .12em;
+          font-size: 10px; color: var(--geo-fg-dim); letter-spacing: .12em;
           margin-bottom: 14px;
         }
         .geo-mq-dim  { color: var(--accent); }
         .geo-mq-num  { }
         .geo-mq-q {
           font-family: var(--f-display); font-size: clamp(17px,2.4vw,22px);
-          font-weight: 500; color: var(--ink-fg); line-height: 1.35;
+          font-weight: 500; color: var(--geo-fg); line-height: 1.35;
           margin: 0 0 22px;
         }
         .geo-mq-opts { display: flex; flex-direction: column; gap: 9px; margin-bottom: 24px; }
@@ -877,14 +880,14 @@ function Scanner({ copy }) {
           background: oklch(0.16 0.016 270);
           border: 1px solid oklch(0.22 0.018 270);
           border-radius: 10px;
-          text-align: left; font-size: 14px; color: var(--ink-fg-mute);
+          text-align: left; font-size: 14px; color: var(--geo-fg-mute);
           transition: all .16s var(--ease, ease); cursor: pointer; line-height: 1.45;
         }
-        .geo-mq-opt:hover { background: oklch(0.19 0.018 270); color: var(--ink-fg); border-color: oklch(0.32 0.022 270); }
+        .geo-mq-opt:hover { background: oklch(0.19 0.018 270); color: var(--geo-fg); border-color: oklch(0.32 0.022 270); }
         .geo-mq-opt.is-sel {
           background: oklch(0.68 0.22 var(--accent-h, 285) / 0.12);
           border-color: oklch(0.68 0.22 var(--accent-h, 285) / 0.5);
-          color: var(--ink-fg);
+          color: var(--geo-fg);
         }
         .geo-mq-mark { color: var(--accent); font-size: 11px; flex-shrink: 0; margin-top: 3px; }
         .geo-mq-footer { display: flex; justify-content: flex-end; }
@@ -894,11 +897,11 @@ function Scanner({ copy }) {
           display: flex; flex-direction: column; align-items: center;
           gap: 24px; padding: 20px 0 10px;
         }
-        .geo-mcalc-title { font-size: 13px; color: var(--ink-fg-mute); letter-spacing: .06em; margin: 0; }
+        .geo-mcalc-title { font-size: 13px; color: var(--geo-fg-mute); letter-spacing: .06em; margin: 0; }
         .geo-mcalc-rows { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 340px; }
         .geo-mcalc-row {
           display: flex; align-items: center; gap: 12px;
-          font-size: 12px; color: var(--ink-fg-mute);
+          font-size: 12px; color: var(--geo-fg-mute);
           animation: geo-rise .4s ease both;
         }
         @keyframes geo-rise { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
@@ -909,8 +912,8 @@ function Scanner({ copy }) {
           animation: qbar-slide 1s linear infinite;
         }
         @keyframes qbar-slide { from{background-position:200% 0} to{background-position:-200% 0} }
-        .geo-mcalc-eng { color: var(--ink-fg); min-width: 90px; }
-        .geo-mcalc-lbl { color: var(--ink-fg-dim); }
+        .geo-mcalc-eng { color: var(--geo-fg); min-width: 90px; }
+        .geo-mcalc-lbl { color: var(--geo-fg-dim); }
 
         /* ── DELIVERY ───────────────────────────────── */
         .geo-mdel { display: flex; flex-direction: column; gap: 0; }
@@ -919,14 +922,14 @@ function Scanner({ copy }) {
           margin-bottom: 24px; flex-wrap: wrap;
         }
         .geo-mdel-score-left { display: flex; flex-direction: column; min-width: 120px; }
-        .geo-mdel-slabel { font-size: 9px; color: var(--ink-fg-dim); letter-spacing: .14em; margin-bottom: 4px; }
+        .geo-mdel-slabel { font-size: 9px; color: var(--geo-fg-dim); letter-spacing: .14em; margin-bottom: 4px; }
         .geo-mdel-snum {
           font-size: 72px; font-weight: 600; line-height: 1;
           letter-spacing: -0.04em; font-family: var(--f-display);
         }
-        .geo-mdel-of { font-size: 18px; color: var(--ink-fg-dim); font-family: var(--f-mono); }
+        .geo-mdel-of { font-size: 18px; color: var(--geo-fg-dim); font-family: var(--f-mono); }
         .geo-mdel-verdict {
-          font-size: 13px; color: var(--ink-fg); line-height: 1.45;
+          font-size: 13px; color: var(--geo-fg); line-height: 1.45;
           margin-top: 8px; max-width: 22ch;
           font-family: var(--f-display);
         }
@@ -934,7 +937,7 @@ function Scanner({ copy }) {
         .geo-mdel-bar-row {
           display: grid; grid-template-columns: 90px 1fr 32px; gap: 8px; align-items: center;
         }
-        .geo-mdel-bar-lbl { font-size: 10px; color: var(--ink-fg-dim); }
+        .geo-mdel-bar-lbl { font-size: 10px; color: var(--geo-fg-dim); }
         .geo-mdel-bar-track {
           height: 4px; background: oklch(0.20 0.018 270); border-radius: 2px; overflow: hidden;
         }
@@ -942,12 +945,12 @@ function Scanner({ copy }) {
           height: 100%; border-radius: 2px;
           transition: width 1s cubic-bezier(.2,.8,.2,1);
         }
-        .geo-mdel-bar-val { font-size: 10px; color: var(--ink-fg); text-align: right; }
+        .geo-mdel-bar-val { font-size: 10px; color: var(--geo-fg); text-align: right; }
         .geo-mdel-div {
           height: 1px; background: oklch(0.20 0.018 270); margin-bottom: 20px;
         }
         .geo-mdel-q {
-          font-size: 15px; font-weight: 500; color: var(--ink-fg);
+          font-size: 15px; font-weight: 500; color: var(--geo-fg);
           font-family: var(--f-display); margin: 0 0 16px;
         }
         .geo-mdel-opts { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
@@ -976,8 +979,8 @@ function Scanner({ copy }) {
           border-radius: 8px; flex-shrink: 0;
         }
         .geo-mdel-opt-body { display: flex; flex-direction: column; gap: 3px; flex: 1; }
-        .geo-mdel-opt-title { font-size: 14px; font-weight: 500; color: var(--ink-fg); }
-        .geo-mdel-opt-sub { font-size: 11px; color: var(--ink-fg-dim); letter-spacing: .04em; }
+        .geo-mdel-opt-title { font-size: 14px; font-weight: 500; color: var(--geo-fg); }
+        .geo-mdel-opt-sub { font-size: 11px; color: var(--geo-fg-dim); letter-spacing: .04em; }
         .geo-mdel-opt-arr { color: var(--accent); font-size: 18px; margin-left: auto; }
 
         /* Telegram option: accent border + subtle glow */
@@ -998,10 +1001,10 @@ function Scanner({ copy }) {
         }
         .geo-memail-title {
           font-family: var(--f-display); font-size: 20px; font-weight: 600;
-          color: var(--ink-fg); margin: 0 0 8px;
+          color: var(--geo-fg); margin: 0 0 8px;
         }
         .geo-memail-company {
-          font-size: 11px; color: var(--ink-fg-dim); letter-spacing: .06em;
+          font-size: 11px; color: var(--geo-fg-dim); letter-spacing: .06em;
           margin: 0 0 24px;
         }
         .geo-memail-row {
@@ -1013,12 +1016,12 @@ function Scanner({ copy }) {
           background: oklch(0.10 0.014 270);
           border: 1px solid oklch(0.22 0.018 270);
           border-radius: 10px;
-          padding: 12px 16px; color: var(--ink-fg);
+          padding: 12px 16px; color: var(--geo-fg);
           font-size: 14px; outline: 0;
           caret-color: var(--accent);
         }
         .geo-memail-input:focus { border-color: var(--accent); }
-        .geo-memail-input::placeholder { color: var(--ink-fg-dim); }
+        .geo-memail-input::placeholder { color: var(--geo-fg-dim); }
 
         /* ── EMAIL SENT ─────────────────────────────── */
         .geo-msent {
@@ -1036,19 +1039,19 @@ function Scanner({ copy }) {
         @keyframes geo-pop { from{transform:scale(.5);opacity:0} to{transform:scale(1);opacity:1} }
         .geo-msent-title {
           font-family: var(--f-display); font-size: 22px; font-weight: 600;
-          color: var(--ink-fg); margin: 0 0 8px;
+          color: var(--geo-fg); margin: 0 0 8px;
         }
-        .geo-msent-email { font-size: 12px; color: var(--ink-fg-dim); letter-spacing: .04em; margin: 0; }
+        .geo-msent-email { font-size: 12px; color: var(--geo-fg-dim); letter-spacing: .04em; margin: 0; }
 
         /* ── Shared ─────────────────────────────────── */
         .geo-link-btn {
           align-self: center; margin-top: 4px;
           font-family: var(--f-mono); font-size: 11px;
-          color: var(--ink-fg-dim); letter-spacing: .06em;
+          color: var(--geo-fg-mute); letter-spacing: .06em;
           padding: 6px 8px;
           transition: color .15s;
         }
-        .geo-link-btn:hover { color: var(--ink-fg); }
+        .geo-link-btn:hover { color: var(--geo-fg); }
       `}</style>
     </>
   );

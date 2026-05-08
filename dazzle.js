@@ -206,6 +206,15 @@
     requestAnimationFrame(() => h1.classList.add("af-on"));
   }
 
+  function refreshHeroHeadline() {
+    const h1 = document.querySelector(".hero-h");
+    buildHeroParticles();
+    if (!h1) return;
+    delete h1.dataset.split;
+    h1.classList.remove("af-on");
+    splitHeadline();
+  }
+
   /* ───────── 7. Card tilt (3D) ───────── */
   function bindCardTilt() {
     if (reduced) return;
@@ -237,6 +246,7 @@
   }
 
   function start() {
+    window.__AF_refreshHeroHeadline = refreshHeroHeadline;
     boot();
     // React mounts after; rebind a few times to catch new nodes
     let tries = 0;
