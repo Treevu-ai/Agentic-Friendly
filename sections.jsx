@@ -39,6 +39,7 @@ function Marquee({ text, engines }) {
           padding-right: 32px;
         }
         .marquee-item { display: inline-flex; align-items: center; gap: 32px; font-size: 28px; }
+        @media (max-width: 600px) { .marquee-item { font-size: 22px; gap: 20px; } .marquee-group { gap: 20px; padding-right: 20px; } }
         .marquee-text { color: var(--ink-fg); font-weight: 400; letter-spacing: -0.02em; }
         .marquee-dot { color: var(--c-coral); }
         @keyframes marquee { from { transform: none; } to { transform: translateX(-50%); } }
@@ -105,6 +106,7 @@ function Metrics({ copy }) {
           position: absolute; top: 18px; right: 18px;
           font-size: 10px; color: var(--ink-fg-dim); letter-spacing: .14em;
         }
+        @media (max-width: 800px) { .metric-tag { right: 0; } }
         .metric-key {
           font-size: clamp(56px, 7vw, 96px);
           font-weight: 400;
@@ -172,7 +174,7 @@ function Pillars({ copy }) {
         .pillars-grid {
           display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
         }
-        @media (max-width: 900px) { .pillars-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .pillars-grid { grid-template-columns: 1fr; gap: 12px; } }
         .pillar {
           position: relative;
           padding: 40px 32px 80px;
@@ -183,13 +185,16 @@ function Pillars({ copy }) {
           transition: all .4s var(--ease);
           cursor: default;
         }
+        @media (max-width: 900px) { .pillar { min-height: 0; padding: 32px 24px 56px; } }
         .pillar.is-on {
           background: rgba(255,255,255,0.12);
           border-color: var(--c-coral-soft);
           transform: translateY(-4px);
           box-shadow: 0 16px 48px rgba(0,0,0,0.24);
         }
+        @media (max-width: 900px) { .pillar.is-on { transform: none; } }
         .pillar.is-off { opacity: .5; }
+        @media (max-width: 900px) { .pillar.is-off { opacity: 1; } }
         .pillar-num {
           font-size: 56px;
           font-weight: 400;
@@ -199,6 +204,7 @@ function Pillars({ copy }) {
           margin-bottom: 20px;
           transition: color .3s;
         }
+        @media (max-width: 600px) { .pillar-num { font-size: 48px; margin-bottom: 16px; } }
         .pillar.is-on .pillar-num { color: var(--c-coral); }
         .pillar-tag {
           font-size: 10px;
@@ -219,6 +225,7 @@ function Pillars({ copy }) {
           color: #ffffff;
           margin-bottom: 12px;
         }
+        @media (max-width: 600px) { .pillar-title { font-size: 20px; } }
         .pillar-desc {
           font-size: 14px;
           line-height: 1.6;
@@ -300,7 +307,7 @@ function Timeline({ copy }) {
         }
         @media (max-width: 800px) { .timeline-head { grid-template-columns: 1fr; gap: 18px; margin-bottom: 36px; } }
         .timeline-track { position: relative; padding-left: 76px; }
-        @media (max-width: 800px) { .timeline-track { padding-left: 56px; } }
+        @media (max-width: 600px) { .timeline-track { padding-left: 52px; } }
         .timeline-rail {
           position: absolute;
           left: 27px;
@@ -309,7 +316,7 @@ function Timeline({ copy }) {
           background: var(--c-hairline);
           overflow: hidden;
         }
-        @media (max-width: 800px) { .timeline-rail { left: 19px; } }
+        @media (max-width: 600px) { .timeline-rail { left: 19px; } }
         .timeline-rail-fill {
           position: absolute;
           top: 0; left: 0; right: 0;
@@ -320,6 +327,7 @@ function Timeline({ copy }) {
           position: relative;
           padding-bottom: 64px;
         }
+        @media (max-width: 600px) { .tl-step { padding-bottom: 44px; } }
         .tl-step:last-child { padding-bottom: 0; }
         .tl-node {
           position: absolute;
@@ -333,8 +341,8 @@ function Timeline({ copy }) {
           place-items: center;
           transition: all .4s var(--ease);
         }
-        @media (max-width: 800px) {
-          .tl-node { left: -56px; width: 40px; height: 40px; }
+        @media (max-width: 600px) {
+          .tl-node { left: -52px; width: 40px; height: 40px; }
         }
         .tl-step.is-on .tl-node {
           background: var(--ink-fg);
@@ -348,6 +356,7 @@ function Timeline({ copy }) {
           letter-spacing: .04em;
           transition: color .3s;
         }
+        @media (max-width: 600px) { .tl-node-inner { font-size: 10px; } }
         .tl-step.is-on .tl-node-inner { color: #ffffff; }
         .tl-week {
           font-size: 11px;
@@ -358,7 +367,7 @@ function Timeline({ copy }) {
         }
         .tl-step.is-on .tl-week { color: var(--accent); }
         .tl-title {
-          font-size: 28px;
+          font-size: clamp(20px, 3vw, 30px);
           font-weight: 400;
           letter-spacing: -0.02em;
           margin-bottom: 10px;
@@ -370,6 +379,7 @@ function Timeline({ copy }) {
           color: var(--ink-fg-mute);
           max-width: 56ch;
         }
+        @media (max-width: 600px) { .tl-desc { font-size: 13px; } }
       `}</style>
     </section>
   );
@@ -465,7 +475,7 @@ function Cases({ copy }) {
           display: grid; grid-template-columns: 1fr 1fr; gap: 0;
           border-top: 1px solid var(--c-hairline);
         }
-        @media (max-width: 800px) { .cases-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 720px) { .cases-grid { grid-template-columns: 1fr; } }
         .case-card {
           padding: 32px;
           border-right: 1px solid var(--c-hairline);
@@ -475,6 +485,7 @@ function Cases({ copy }) {
           transition: background .3s;
           background: #ffffff;
         }
+        @media (max-width: 600px) { .case-card { padding: 24px 20px; } }
         .case-card:nth-child(2n) { border-right: 0; }
         @media (max-width: 800px) { .case-card { border-right: 0; } }
         .case-card:hover { background: var(--cream-0); }
@@ -488,15 +499,16 @@ function Cases({ copy }) {
           font-family: var(--f-mono);
         }
         .case-q {
-          font-size: 16px;
+          font-size: 15px;
           color: var(--ink-fg);
           line-height: 1.45;
           font-style: italic;
           max-width: 32ch;
         }
-        .case-result { display: flex; align-items: baseline; gap: 16px; }
+        @media (max-width: 600px) { .case-q { font-size: 13px; } }
+        .case-result { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
         .case-r {
-          font-size: 52px;
+          font-size: clamp(38px, 6vw, 56px);
           font-weight: 400;
           letter-spacing: -0.04em;
           color: var(--ink-fg);
@@ -567,6 +579,7 @@ function Pricing({ copy }) {
 
       <style>{`
         .pricing-head { text-align: center; margin: 0 auto 64px; max-width: 720px; }
+        @media (max-width: 600px) { .pricing-head { margin-bottom: 40px; } }
         .pricing-head h2 { margin-left: auto; margin-right: auto; }
         .pricing-sub { color: var(--ink-fg-mute); font-size: 16px; margin-top: 12px; }
         .pricing-grid {
@@ -575,7 +588,7 @@ function Pricing({ copy }) {
           gap: 16px;
           align-items: stretch;
         }
-        @media (max-width: 900px) { .pricing-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .pricing-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; } }
         .plan {
           background: var(--cream-0);
           border: 1px solid var(--c-card-border);
@@ -585,6 +598,7 @@ function Pricing({ copy }) {
           position: relative;
           transition: all .3s var(--ease);
         }
+        @media (max-width: 600px) { .plan { padding: 28px 20px; } }
         .plan:hover { border-color: var(--c-hairline); box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
         .plan--hl {
           background: var(--ink-fg);
@@ -593,6 +607,8 @@ function Pricing({ copy }) {
           transform: translateY(-8px);
           box-shadow: 0 8px 32px rgba(23,23,28,0.18);
         }
+        /* On single-column mobile, lift effect breaks layout */
+        @media (max-width: 900px) { .plan--hl { transform: none; } }
         .plan-tag {
           position: absolute;
           top: -12px; left: 24px;
@@ -625,6 +641,7 @@ function Pricing({ copy }) {
         .plan--hl .plan-price { border-bottom-color: rgba(255,255,255,0.14); }
         .plan-price-cur { color: var(--c-coral); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; font-family: var(--f-mono); align-self: flex-start; margin-top: 14px; }
         .plan-price-num { font-size: 52px; font-weight: 400; letter-spacing: -0.04em; line-height: 1; color: var(--ink-fg); }
+        @media (max-width: 400px) { .plan-price-num { font-size: 44px; } }
         .plan--hl .plan-price-num { color: #ffffff; }
         .plan-price-per { color: var(--ink-fg-dim); font-size: 12px; margin-left: 4px; font-family: var(--f-mono); }
         .plan--hl .plan-price-per { color: rgba(255,255,255,0.45); }
@@ -696,7 +713,7 @@ function FinalCTA({ copy }) {
           pointer-events: none;
         }
         .final-sub {
-          font-size: 18px;
+          font-size: clamp(14px, 2vw, 18px);
           line-height: 1.5;
           color: rgba(255,255,255,0.65);
           max-width: 56ch;
@@ -775,9 +792,9 @@ function Footer({ copy }) {
           padding-bottom: 64px;
           border-bottom: 1px solid rgba(255,255,255,0.10);
         }
-        @media (max-width: 900px) { .footer-top { grid-template-columns: 1fr; gap: 32px; } }
+        @media (max-width: 900px) { .footer-top { grid-template-columns: 1fr; gap: 32px; padding-bottom: 40px; } }
         .footer-mark {
-          font-size: 34px;
+          font-size: clamp(24px, 4vw, 36px);
           font-weight: 400;
           letter-spacing: -0.03em;
           line-height: 1.0;
@@ -795,7 +812,8 @@ function Footer({ copy }) {
           grid-template-columns: repeat(4, 1fr);
           gap: 24px;
         }
-        @media (max-width: 720px) { .footer-cols { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 720px) { .footer-cols { grid-template-columns: repeat(2, 1fr); gap: 20px; } }
+        @media (max-width: 400px) { .footer-cols { grid-template-columns: 1fr 1fr; gap: 16px; } }
         .footer-col { display: flex; flex-direction: column; gap: 10px; }
         .footer-col-h {
           font-size: 10px;
