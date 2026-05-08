@@ -4,7 +4,7 @@ const { useState: useS, useEffect: useE, useRef: useR } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "lang": "es",
-  "accentHue": 285,
+  "accentHue": 20,
   "density": "regular",
   "showTicker": true,
   "scannerMode": "interactive"
@@ -12,12 +12,17 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 
 function App() {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [announceOpen, setAnnounceOpen] = useS(true);
   const lang = t.lang === "en" ? "en" : "es";
   const c = window.COPY[lang];
 
-  // accent hue
+  // accent hue — shift the coral accent dynamically
   useE(() => {
-    document.documentElement.style.setProperty("--accent-h", t.accentHue);
+    const h = t.accentHue;
+    document.documentElement.style.setProperty("--accent-h", h);
+    document.documentElement.style.setProperty("--accent", `hsl(${h}, 90%, 60%)`);
+    document.documentElement.style.setProperty("--accent-soft", `hsla(${h}, 90%, 60%, 0.14)`);
+    document.documentElement.style.setProperty("--c-coral", `hsl(${h}, 90%, 60%)`);
   }, [t.accentHue]);
 
   // density
@@ -36,6 +41,13 @@ function App() {
 
   return (
     <div>
+      {announceOpen && (
+        <div className="announce-bar">
+          <span>{lang === "en" ? "🚀 Now supporting 10+ AI engines — fully agentic by 2027." : "🚀 Ahora compatible con 10+ motores IA — 100% agéntico para 2027."}</span>
+          <a href="#section-producto">{lang === "en" ? "Learn more" : "Saber más"}</a>
+          <button className="announce-bar-close" onClick={() => setAnnounceOpen(false)} aria-label="Close">✕</button>
+        </div>
+      )}
       <Nav copy={c} lang={lang} setLang={(v) => setTweak("lang", v)} />
       <Hero copy={c.hero} />
       {t.showTicker && <Marquee text={c.ticker} />}
@@ -112,7 +124,7 @@ function Nav({ copy, lang, setLang }) {
           <button onClick={() => setLang("es")} className={lang === "es" ? "is-on" : ""}>ES</button>
           <button onClick={() => setLang("en")} className={lang === "en" ? "is-on" : ""}>EN</button>
         </div>
-        <button className="btn btn--accent" style={{ padding: "8px 14px", fontSize: 12 }} onClick={openScanner}>
+        <button className="btn btn--accent" style={{ padding: "10px 20px", fontSize: 13 }} onClick={openScanner}>
           {copy.nav.cta} <span className="arr">→</span>
         </button>
         <button className="nav-burger" onClick={() => setOpen(o => !o)} aria-label="Menu">
@@ -188,19 +200,19 @@ function Hero({ copy }) {
             <button className="btn btn--accent" onClick={openScanner}>
               {copy.cta1}<span className="arr">→</span>
             </button>
-            <button className="btn btn--ghost" onClick={() => scrollTo("section-proceso")}>
+            <button className="btn btn--ghost hero-btn-ghost" onClick={() => scrollTo("section-proceso")}>
               ▶ &nbsp;{copy.cta2}
             </button>
           </div>
           <div className="hero-engines-row">
-            <div className="mono" style={{ fontSize: 11, color: "var(--ink-fg-dim)", letterSpacing: ".14em" }}>
+            <div className="mono" style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", letterSpacing: ".14em" }}>
               {copy.ticker}
             </div>
             <div className="hero-engines-list">
               {window.ENGINES.map((e) => (
                 <div key={e.id} className="hero-engine-chip">
                   <window.EngineMark e={e} size={16} />
-                  <span style={{ fontSize: 12, color: "var(--ink-fg-mute)" }}>{e.name}</span>
+                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.55)" }}>{e.name}</span>
                 </div>
               ))}
             </div>
@@ -221,10 +233,12 @@ function Hero({ copy }) {
       <style>{`
         .hero {
           position: relative;
-          min-height: calc(100vh - 60px);
+          min-height: calc(100vh - 96px);
           padding: 80px 48px 60px;
           overflow: hidden;
           isolation: isolate;
+          background: var(--c-deep-green);
+          color: #ffffff;
         }
         @media (max-width: 720px) { .hero { padding: 60px 24px 80px; min-height: 0; } }
         .hero-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
@@ -232,40 +246,40 @@ function Hero({ copy }) {
           position: absolute; inset: 0;
           width: 100%; height: 100%;
           object-fit: cover; object-position: center;
-          opacity: 0.5;
-          filter: saturate(0.85) contrast(1.05);
+          opacity: 0.28;
+          filter: saturate(0.6) contrast(1.1);
           transform: scale(1.04);
           animation: heroVideoBreathe 16s ease-in-out infinite;
         }
         @keyframes heroVideoBreathe {
-          0%, 100% { transform: scale(1.04); filter: saturate(0.85) contrast(1.05); }
-          50% { transform: scale(1.08); filter: saturate(1) contrast(1.1); }
+          0%, 100% { transform: scale(1.04); opacity: 0.28; }
+          50% { transform: scale(1.07); opacity: 0.32; }
         }
         .hero-video-overlay {
           position: absolute; inset: 0;
           background:
-            oklch(0.09 0.014 270 / 0.52),
-            radial-gradient(ellipse at 50% 30%, oklch(0.08 0.014 270 / 0.30) 0%, var(--ink-0) 82%),
-            linear-gradient(180deg, var(--ink-0) 0%, transparent 18%, transparent 72%, var(--ink-0) 100%);
+            rgba(0,60,51,0.72),
+            radial-gradient(ellipse at 50% 30%, rgba(0,40,35,0.45) 0%, transparent 72%),
+            linear-gradient(180deg, rgba(0,60,51,0.9) 0%, transparent 25%, transparent 75%, rgba(0,60,51,0.95) 100%);
         }
         .hero-grid {
           position: absolute; inset: 0;
           background-image:
-            linear-gradient(oklch(0.30 0.020 270 / 0.18) 1px, transparent 1px),
-            linear-gradient(90deg, oklch(0.30 0.020 270 / 0.18) 1px, transparent 1px);
+            linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
           background-size: 80px 80px;
           mask-image: radial-gradient(ellipse at 50% 30%, black, transparent 70%);
         }
         .hero-glow {
           position: absolute;
-          width: 700px; height: 700px;
-          left: -10%; top: -20%;
-          background: radial-gradient(circle, var(--accent-soft) 0%, transparent 60%);
+          width: 600px; height: 600px;
+          left: -5%; top: -15%;
+          background: radial-gradient(circle, rgba(255,119,89,0.14) 0%, transparent 65%);
           filter: blur(60px);
         }
         .hero-glow-2 {
-          left: auto; right: -15%; top: 30%;
-          background: radial-gradient(circle, oklch(0.78 0.18 calc(var(--accent-h) - 80) / 0.18) 0%, transparent 60%);
+          left: auto; right: -10%; top: 35%;
+          background: radial-gradient(circle, rgba(0,200,150,0.12) 0%, transparent 65%);
         }
         .hero-inner {
           display: grid;
@@ -278,12 +292,13 @@ function Hero({ copy }) {
           .hero-inner { grid-template-columns: 1fr; gap: 48px; }
         }
         .hero-h {
-          margin: 24px 0 24px;
-          color: var(--ink-fg);
+          margin: 28px 0 24px;
+          color: #ffffff;
+          letter-spacing: -0.03em;
         }
         .hero-accent {
           position: relative;
-          color: var(--accent);
+          color: var(--c-coral);
           display: inline-block;
         }
         .hero-underline {
@@ -291,27 +306,42 @@ function Hero({ copy }) {
           left: 0; right: 0; bottom: -10px;
           width: 100%;
           height: 12px;
-          color: var(--accent);
+          color: var(--c-coral);
           opacity: 0.7;
         }
         .hero-sub {
-          font-size: clamp(15px, 1.4vw, 19px);
+          font-size: clamp(16px, 1.4vw, 18px);
           line-height: 1.55;
-          color: var(--ink-fg-mute);
+          color: rgba(255,255,255,0.68);
           max-width: 52ch;
-          margin: 0 0 32px;
+          margin: 0 0 36px;
         }
-        .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 64px; }
+        .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 56px; }
+        .hero-btn-ghost {
+          border-color: rgba(255,255,255,0.24) !important;
+          color: rgba(255,255,255,0.85) !important;
+          background: transparent !important;
+        }
+        .hero-btn-ghost:hover {
+          border-color: rgba(255,255,255,0.6) !important;
+          background: rgba(255,255,255,0.08) !important;
+          color: #ffffff !important;
+        }
         .hero-engines-row {
           display: flex; align-items: center; gap: 24px;
           padding-top: 28px;
-          border-top: 1px dashed var(--ink-line);
+          border-top: 1px solid rgba(255,255,255,0.12);
         }
         @media (max-width: 600px) { .hero-engines-row { flex-direction: column; align-items: flex-start; gap: 12px; } }
         .hero-engines-list {
           display: flex; gap: 16px; flex-wrap: wrap;
         }
         .hero-engine-chip { display: flex; align-items: center; gap: 6px; }
+        .hero .pill {
+          background: rgba(255,255,255,0.08);
+          border-color: rgba(255,255,255,0.18);
+          color: rgba(255,255,255,0.7);
+        }
 
         .hero-right { position: relative; display: flex; justify-content: center; }
         .hero-console-tag {
@@ -319,10 +349,10 @@ function Hero({ copy }) {
           top: -24px; right: 0;
           font-size: 10px;
           letter-spacing: .18em;
-          color: var(--accent);
+          color: var(--c-coral);
           display: flex; align-items: center; gap: 8px;
         }
-        .tag-line { width: 22px; height: 1px; background: var(--accent); }
+        .tag-line { width: 22px; height: 1px; background: var(--c-coral); }
 
         .hero-scroll {
           position: absolute;
@@ -331,11 +361,11 @@ function Hero({ copy }) {
           display: flex; flex-direction: column; align-items: center; gap: 10px;
           font-size: 9px;
           letter-spacing: .24em;
-          color: var(--ink-fg-dim);
+          color: rgba(255,255,255,0.35);
         }
         .hero-scroll-line {
           width: 1px; height: 30px;
-          background: linear-gradient(180deg, var(--accent), transparent);
+          background: linear-gradient(180deg, var(--c-coral), transparent);
           animation: scrollLine 2s ease-in-out infinite;
         }
         @keyframes scrollLine {
@@ -357,10 +387,10 @@ function ScannerSection({ copy }) {
       <div className="hud-line"/>
       <div className="container" style={{ position: "relative" }}>
         <div className="scanner-head">
-          <div className="eyebrow eyebrow-dot">{copy.tag}</div>
-          <h2 className="h-display h-display-md" style={{ marginTop: 18, marginBottom: 14 }}>
+          <div className="eyebrow" style={{ color: "rgba(255,255,255,0.5)" }}>{copy.tag}</div>
+          <h2 className="h-display h-display-md" style={{ marginTop: 18, marginBottom: 14, color: "#ffffff" }}>
             {copy.title}<br/>
-            <span style={{ color: "var(--accent)" }}>{copy.titleAccent}</span>
+            <span style={{ color: "var(--c-coral)" }}>{copy.titleAccent}</span>
           </h2>
           <div className="scanner-sub">{copy.sub}</div>
         </div>
@@ -373,8 +403,8 @@ function ScannerSection({ copy }) {
           position: absolute;
           left: 50%; top: 60%;
           transform: translate(-50%, -50%);
-          width: 1000px; height: 600px;
-          background: radial-gradient(ellipse, var(--accent-soft) 0%, transparent 60%);
+          width: 800px; height: 500px;
+          background: radial-gradient(ellipse, rgba(255,119,89,0.14) 0%, transparent 60%);
           filter: blur(60px);
           pointer-events: none;
           z-index: 0;
@@ -386,7 +416,7 @@ function ScannerSection({ copy }) {
         }
         .scanner-head h2 { margin-left: auto; margin-right: auto; }
         .scanner-sub {
-          color: var(--ink-fg-mute);
+          color: rgba(255,255,255,0.58);
           font-size: 16px;
         }
       `}</style>
