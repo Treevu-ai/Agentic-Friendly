@@ -10,11 +10,28 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "scannerMode": "interactive"
 }/*EDITMODE-END*/;
 
+function getInitialLang() {
+  const urlLang = new URLSearchParams(window.location.search).get("lang");
+  if (urlLang === "en" || urlLang === "es") return urlLang;
+
+  const htmlLang = document.documentElement.lang.trim().toLowerCase().slice(0, 2);
+  if (htmlLang === "en" || htmlLang === "es") return htmlLang;
+
+  return TWEAK_DEFAULTS.lang === "en" ? "en" : "es";
+}
+
 function App() {
-  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [t, setTweak] = useTweaks({ ...TWEAK_DEFAULTS, lang: getInitialLang() });
   const [announceOpen, setAnnounceOpen] = useS(true);
   const lang = t.lang === "en" ? "en" : "es";
   const c = window.COPY[lang];
+
+  useE(() => {
+    document.documentElement.lang = lang;
+    document.title = lang === "en"
+      ? "AGENTIC FIRST · Agentic positioning for 2027"
+      : "AGENTIC FIRST · Posicionamiento agéntico para 2027";
+  }, [lang]);
 
   // accent hue — shift the coral accent dynamically
   useE(() => {
